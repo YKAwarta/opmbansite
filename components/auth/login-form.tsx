@@ -7,9 +7,7 @@ import {Button} from '@/components/ui/button'
 import {Input} from '@/components/ui/input'
 import {Label} from '@/components/ui/label'
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card'
-import {toast} from '@/components/ui/use-toast'
-import { set } from 'react-hook-form'
-import { title } from 'process'
+import {toast} from '@/hooks/use-toast'
 
 export function LoginForm(){
     const [email, setEmail] = useState('')
@@ -22,20 +20,17 @@ export function LoginForm(){
         e.preventDefault()
         setLoading(true)
 
-        const {error} = await supabase.auth.signInWithPassword({email, password})
+        const eLower = email.trim().toLowerCase()
+
+        const {error} = await supabase.auth.signInWithPassword({email: eLower, password})
 
         if(error){
-            toast({
-                title: 'Error',
-                description: error.message,
-                variant: 'destructive'
-            })
-        } else {
-            router.refresh()
-            router.push('/dashboard')
+            toast({title: 'Login failed', description: error.message, variant: 'destructive'})
+            setLoading(false)
+            return
         }
 
-        setLoading(false)
+        router.replace('/dashboard')
     }
 
     return (
@@ -55,6 +50,7 @@ export function LoginForm(){
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
+                            autoComplete="email"
                         />
                     </div>
                     <div className="space-y-2">
@@ -65,6 +61,7 @@ export function LoginForm(){
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
+                            autoComplete="current-password"
                         />
                     </div>
                     <Button type="submit" className="w-full" disabled={loading}>

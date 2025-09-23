@@ -9,11 +9,11 @@ export default async function DashboardPage() {
     redirect('/login')
   }
   
-  const { data: member } = await (await supabase).from('members').select('*').eq('id', user.id).single()
+  const { data: member, error } = await (await supabase).from('members').select('full_name').eq('id', user.id).single()
 
   return (
     <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">Welcome, {member?.full_name}</h1>
+      <h1 className="text-3xl font-bold mb-6">Welcome, {member?.full_name ?? Member}</h1>
       {/* We'll add credentials display here next */}
     </div>
   )

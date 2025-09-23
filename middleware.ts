@@ -2,11 +2,7 @@ import {createServerClient, type CookieOptions} from "@supabase/ssr"
 import {NextResponse, type NextRequest} from 'next/server'
 
 export async function middleware(request: NextRequest){
-    let response = NextResponse.next({
-        request: {
-            headers: request.headers,
-        },
-    })
+    let response = NextResponse.next()
 
     const supabase = createServerClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!, 
@@ -17,22 +13,10 @@ export async function middleware(request: NextRequest){
                     return request.cookies.get(name)?.value
                 },
                 set(name: string, value: string, options: CookieOptions){
-                    request.cookies.set({name, value, ...options})
-                    response = NextResponse.next({
-                        request: {
-                            headers: request.headers,
-                        },
-                    })
-                    response.cookies.set({name,  value, ...options})
+                    response.cookies.set({name, value, ...options})
                 },
                 remove(name: string, options: CookieOptions){
-                    request.cookies.set({name, value: '', ...options})
-                    response = NextResponse.next({
-                        request: {
-                            headers: request.headers,
-                        },
-                    })
-                    response.cookies.set({name, value: '', ...options})
+                    response.cookies.set({name, value: '', ...options, maxAge: 0})
                 },
             },
         }
@@ -40,13 +24,22 @@ export async function middleware(request: NextRequest){
 
     const {data: {user}} = await supabase.auth.getUser()
 
-    if(request.nextUrl.pathname.startsWith('/dashboard') || request.nextUrl.pathname.startsWith('/admin')){
+    const path = request.nextUrl.pathname
+
+    if(path.startsWith('/dashboard') || path.startsWith('/admin')){
         if(!user){
             return NextResponse.redirect(new URL('/login', request.url))
         }
+
+        if(path.startsWith('/admin')){
+            const{data: isAdmin} = await supabase.rpc('is_admin')
+            if(!isAdmin){
+                return NextResponse.redirect(new URL('/dashboard', request.url))
+            }
+        }
     }
 
-    if(request.nextUrl.pathname === '/login' && user){
+    if(path === '/login' && user){
         return NextResponse.redirect(new URL('/dashboard', request.url))
     }
 
