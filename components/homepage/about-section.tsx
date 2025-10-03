@@ -7,7 +7,7 @@ export function AboutSection() {
       <div className="container mx-auto px-6">
         {/* About */}
         <div className="max-w-4xl mx-auto text-center mb-20">
-          <h2 className="text-4xl font-bold text-[#093968] mb-6">About Our Club</h2>
+          <h2 className="text-4xl font-bold text-[#093968] mb-6">About The Club</h2>
           <p className="text-lg text-[#0d0d0b]/80 leading-relaxed">
             The Operations and Project Management & Business Analytics (OPM & BAN) Club is based in Alfaisal University, and is dedicated to 
             preparing our students for success in all fields, positions, and responsibilities pertaining to project management and business analytics. We provide comprehensive 
