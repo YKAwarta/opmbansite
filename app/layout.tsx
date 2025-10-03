@@ -13,9 +13,15 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "OPM/BAN Club",
-  description: "Official OPM/BAN Club Website",
+export const metadata = {
+  title: 'The OPM & BAN Club | Alfaisal University',
+  icons: {
+    icon: [
+      { url: '/club_logo_32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/club_logo_16.png', sizes: '16x16', type: 'image/png' },
+    ],
+    apple: '/club_logo_apple.png',
+  },
 };
 
 export default function RootLayout({
