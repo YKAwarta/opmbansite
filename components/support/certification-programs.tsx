@@ -3,7 +3,7 @@ import { CheckCircle, BookOpen, Trophy, TrendingUp } from 'lucide-react'
 
 const certifications = [
   {
-    category: 'Project Management',
+    category: 'Operations & Project Management',
     color: 'border-brand-azure',
     barClass: 'bg-brand-azure',
     bgColor: 'bg-brand-azure/5',
@@ -35,14 +35,14 @@ const certifications = [
         provider: 'Microsoft',
         description: 'Demonstrate competency in Excel fundamentals',
         prerequisites: 'Basic computer skills',
-        support: 'Hands-on labs, practice files, mock exams'
+        support: 'Practice files, mock exams, additional resources'
       },
       {
         name: 'Tableau Desktop Specialist',
         provider: 'Tableau',
         description: 'Foundational skills in Tableau Desktop',
         prerequisites: 'None',
-        support: 'Software access, guided tutorials, projects'
+        support: 'Software access, tutorials, projects'
       },
     ]
   },

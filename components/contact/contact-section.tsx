@@ -60,9 +60,9 @@ export function ContactSection() {
               </div>
               <div>
                 <Clock className="w-8 h-8 text-brand-green mx-auto mb-3" />
-                <h4 className="font-semibold text-brand-azure mb-2">Office Hours</h4>
+                <h4 className="font-semibold text-brand-azure mb-2">Urgent Contact Hours</h4>
                 <p className="text-sm text-brand-olive/60">
-                  Sunday - Thursday<br />2:00 PM - 5:00 PM
+                  Sunday - Thursday<br />12:00 PM - 1:00 PM
                 </p>
               </div>
               <div>

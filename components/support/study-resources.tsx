@@ -1,5 +1,5 @@
 import { Card } from '@/components/ui/card'
-import { Download, Video, Users, Calendar } from 'lucide-react'
+import { Download, Users, Calendar } from 'lucide-react'
 
 export function StudyResources() {
   return (
@@ -9,8 +9,9 @@ export function StudyResources() {
           Study Resources & Support
         </h2>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
-          <Card className="p-6 text-center hover:shadow-lg transition">
+        {/* centered grid */}
+        <div className="mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-5xl justify-items-center">
+          <Card className="w-full max-w-sm p-6 text-center hover:shadow-lg transition">
             <div className="w-12 h-12 bg-[#093968]/10 rounded-lg flex items-center justify-center mx-auto mb-4">
               <Download className="h-6 w-6 text-[#093968]" />
             </div>
@@ -20,17 +21,7 @@ export function StudyResources() {
             </p>
           </Card>
 
-          <Card className="p-6 text-center hover:shadow-lg transition">
-            <div className="w-12 h-12 bg-[#0abd62]/10 rounded-lg flex items-center justify-center mx-auto mb-4">
-              <Video className="h-6 w-6 text-[#0abd62]" />
-            </div>
-            <h3 className="font-semibold text-[#093968] mb-2">Video Tutorials</h3>
-            <p className="text-sm text-[#0d0d0b]/60">
-              Recorded sessions and tutorials available 24/7
-            </p>
-          </Card>
-
-          <Card className="p-6 text-center hover:shadow-lg transition">
+          <Card className="w-full max-w-sm p-6 text-center hover:shadow-lg transition">
             <div className="w-12 h-12 bg-[#f0ba1b]/10 rounded-lg flex items-center justify-center mx-auto mb-4">
               <Users className="h-6 w-6 text-[#f0ba1b]" />
             </div>
@@ -40,13 +31,13 @@ export function StudyResources() {
             </p>
           </Card>
 
-          <Card className="p-6 text-center hover:shadow-lg transition">
+          <Card className="w-full max-w-sm p-6 text-center hover:shadow-lg transition">
             <div className="w-12 h-12 bg-[#093968]/10 rounded-lg flex items-center justify-center mx-auto mb-4">
               <Calendar className="h-6 w-6 text-[#093968]" />
             </div>
-            <h3 className="font-semibold text-[#093968] mb-2">Scheduled Sessions</h3>
+            <h3 className="font-semibold text-[#093968] mb-2">Workshop Sessions</h3>
             <p className="text-sm text-[#0d0d0b]/60">
-              Weekly workshops and mentorship sessions
+              Workshops and testimonies from certified members throughout the year
             </p>
           </Card>
         </div>
