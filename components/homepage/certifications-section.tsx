@@ -15,7 +15,7 @@ const certifications: Cert[] = [
     alt: 'PMI CAPM badge',
   },
   {
-    name: 'PMI-CPMAI',
+    name: 'PMI-CPMAI™',
     title: 'PMI Certified Professional in Managing AI',
     logo: '/cert-logos/pmi-cpmai.png',
     alt: 'PMI CPMAI badge',

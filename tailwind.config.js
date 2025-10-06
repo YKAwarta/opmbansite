@@ -22,6 +22,8 @@ module.exports = {
       			green: '#0abd62',
       			olive: '#0d0d0b',
       			orange: '#f0ba1b',
+				blue: '#4169e1',
+				pink: '#ff007f',
 			},
   			border: 'hsl(var(--border))',
   			input: 'hsl(var(--input))',

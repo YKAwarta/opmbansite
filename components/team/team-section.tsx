@@ -78,13 +78,13 @@ export function TeamSection() {
         <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 mb-8">
           <TabsTrigger
             value="male"
-            className="data-[state=active]:bg-[#4169e1] data-[state=active]:text-white"
+            className="data-[state=active]:bg-brand-blue data-[state=active]:text-white"
           >
             Male Staff
           </TabsTrigger>
           <TabsTrigger
             value="female"
-            className="data-[state=active]:bg-[#ff007f] data-[state=active]:text-white"
+            className="data-[state=active]:bg-brand-pink data-[state=active]:text-white"
           >
             Female Staff
           </TabsTrigger>
