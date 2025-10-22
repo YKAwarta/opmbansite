@@ -55,7 +55,7 @@ export function ContactSection() {
                 <MessageSquare className="w-8 h-8 text-brand-azure mx-auto mb-3" />
                 <h4 className="font-semibold text-brand-azure mb-2">General Inquiries</h4>
                 <a href="mailto:opmban.club@alfaisal.edu" className="text-sm text-brand-olive/60">
-                    opmban.club@alfaisal.edu
+                    pm@alfaisal.edu
                 </a>
               </div>
               <div>
