@@ -1,53 +1,68 @@
-import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { NextResponse } from 'next/server'
 
 export async function POST(request: Request) {
   const supabase = await createClient()
-
-  const { data: { user }, error: userErr } = await supabase.auth.getUser()
-  if (userErr) return NextResponse.json({ error: userErr.message }, { status: 400 })
-  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-
-  const { data: isAdmin, error: adminErr } = await supabase.rpc('is_admin')
-  if (adminErr) return NextResponse.json({ error: adminErr.message }, { status: 400 })
-  if (!isAdmin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-
-  const body = await request.json()
-  const list: Array<string | { email: string; full_name?: string; student_id?: string; gender?: 'male'|'female' }> =
-    Array.isArray(body?.emails) ? body.emails : [body?.emails]
-
-  const admin = createAdminClient()
-  const results: Array<{ email: string; success: boolean; error?: string }> = []
-
-  for (const item of list) {
-    const email = (typeof item === 'string' ? item : item?.email)?.trim().toLowerCase()
-    if (!email) {
-      results.push({ email: '', success: false, error: 'missing email' })
-      continue
-    }
-
-    const { data: allow, error: allowErr } = await admin
-      .from('approved_emails')
-      .select('full_name, student_id, gender')
-      .eq('email', email)
-      .single()
-
-    if (allowErr || !allow) {
-      results.push({ email, success: false, error: 'email not on allowlist' })
-      continue
-    }
-
-    const { error: inviteErr } = await admin.auth.admin.inviteUserByEmail(email, {
-      data: {
-        full_name: allow.full_name ?? null,
-        student_id: allow.student_id ?? null,
-        gender: allow.gender ?? null,
-      },
-    })
-
-    results.push({ email, success: !inviteErr, error: inviteErr?.message })
+  const { data: { user } } = await supabase.auth.getUser()
+  
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  return NextResponse.json({ results })
+  const { data: isAdmin } = await supabase.rpc('is_admin')
+  if (!isAdmin) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  }
+
+  const body = await request.json()
+  const { email, full_name, student_id, gender, role, position, password } = body
+
+  const adminClient = createAdminClient()
+
+  try {
+    // Create auth user with password
+    const { data: authData, error: authError } = await adminClient.auth.admin.createUser({
+      email,
+      password, // Admin sets initial password
+      email_confirm: true,
+      user_metadata: {
+        full_name,
+        student_id,
+        gender
+      }
+    })
+
+    if (authError) throw authError
+
+    // Create member record
+    const { error: memberError } = await adminClient
+      .from('members')
+      .insert({
+        id: authData.user.id,
+        email,
+        full_name,
+        student_id,
+        role: role || 'member',
+        position: position || null,
+        gender,
+        is_active: true
+      })
+
+    if (memberError) {
+      // Rollback: delete auth user if member creation fails
+      await adminClient.auth.admin.deleteUser(authData.user.id)
+      throw memberError
+    }
+
+    return NextResponse.json({ 
+      success: true, 
+      message: `Account created for ${email} with password: ${password}` 
+    })
+  } catch (error) {
+    console.error('Error creating account:', error)
+    return NextResponse.json({ 
+      error: error instanceof Error ? error.message : 'Failed to create account' 
+    }, { status: 400 })
+  }
 }

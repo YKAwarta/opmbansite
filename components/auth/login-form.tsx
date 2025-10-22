@@ -7,18 +7,22 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 import { toast } from '@/hooks/use-toast'
+import { AlertCircle } from 'lucide-react'
 
 export function LoginForm() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
   const router = useRouter()
   const supabase = createClient()
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
+    setError('')
 
     try {
       const { error: signInError } = await supabase.auth.signInWithPassword({
@@ -27,14 +31,16 @@ export function LoginForm() {
       })
 
       if (signInError) {
+        setError('Invalid email or password. Please try again.')
         toast({
-          title: 'Login failed',
+          title: 'Login Failed',
           description: signInError.message,
           variant: 'destructive',
         })
         return
       }
 
+      // Setup member record if first login
       const setupResponse = await fetch('/api/auth/setup-member', {
         method: 'POST',
       })
@@ -42,29 +48,13 @@ export function LoginForm() {
       if (!setupResponse.ok) {
         const errorData = await setupResponse.json()
         console.error('Member setup failed:', errorData)
-        toast({
-          title: 'Setup Error',
-          description: 'Failed to complete account setup. Please contact an administrator.',
-          variant: 'destructive',
-        })
-        await supabase.auth.signOut()
-        return
+        // Don't block login if member already exists
       }
-
-      toast({
-        title: 'Welcome!',
-        description: 'Login successful',
-      })
 
       router.refresh()
       router.push('/dashboard')
-    } catch (error) {
-      console.error('Login error:', error)
-      toast({
-        title: 'Error',
-        description: 'An unexpected error occurred',
-        variant: 'destructive',
-      })
+    } catch (err) {
+      setError('An unexpected error occurred. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -72,16 +62,23 @@ export function LoginForm() {
 
   return (
     <Card className="w-full max-w-md">
-      <CardHeader>
-        <CardTitle>Member Login</CardTitle>
+      <CardHeader className="space-y-1">
+        <CardTitle className="text-2xl">Member Login</CardTitle>
         <CardDescription>
-          Enter your Alfaisal university email and your password to access your e-wallet
+          Enter your university email and password to access your e-wallet
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleLogin} className="space-y-4">
+          {error && (
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+          
           <div className="space-y-2">
-            <Label htmlFor="email">Alfaisal Email</Label>
+            <Label htmlFor="email">University Email</Label>
             <Input
               id="email"
               type="email"
