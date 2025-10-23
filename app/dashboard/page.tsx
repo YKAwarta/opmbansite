@@ -39,7 +39,7 @@ export default async function DashboardPage() {
   return (
     <div className="container mx-auto p-6 max-w-7xl">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">Welcome, {member.full_name}</h1>
+        <h1 className="text-3xl font-bold">Welcome, {member.full_name}!</h1>
         <form action="/api/auth/logout" method="POST">
           <Button type="submit" variant="outline">
             <LogOut className="w-4 h-4 mr-2" />
