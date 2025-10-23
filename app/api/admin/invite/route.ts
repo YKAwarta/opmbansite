@@ -1,6 +1,9 @@
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { NextResponse } from 'next/server'
+import { Resend } from 'resend'
+
+const resend = new Resend(process.env.RESEND_API_KEY)
 
 export async function POST(request: Request) {
   const supabase = await createClient()
@@ -10,7 +13,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  // Verify admin
   const { data: adminCheck } = await supabase
     .from('members')
     .select('role')
@@ -27,21 +29,17 @@ export async function POST(request: Request) {
   const adminClient = createAdminClient()
 
   try {
-    // Step 1: Create auth user
+    // Create auth user
     const { data: authData, error: authError } = await adminClient.auth.admin.createUser({
       email,
       password,
       email_confirm: true,
-      user_metadata: {
-        full_name,
-        student_id,
-        gender
-      }
+      user_metadata: { full_name, student_id, gender }
     })
 
     if (authError) throw authError
 
-    // Step 2: Create member record (CRITICAL)
+    // Create member record
     const { error: memberError } = await adminClient
       .from('members')
       .insert({
@@ -56,28 +54,39 @@ export async function POST(request: Request) {
       })
 
     if (memberError) {
-      // ROLLBACK: Delete auth user if member creation fails
       await adminClient.auth.admin.deleteUser(authData.user.id)
       throw memberError
     }
 
-    // Step 3: Send email with credentials
-    // For now, we'll return the credentials for manual sending
-    // In production, integrate with an email service
+    // Send email with credentials
+    if (process.env.RESEND_API_KEY) {
+      await resend.emails.send({
+        from: 'OPM/BAN Club <noreply@yourdomain.com>', // Update with your domain
+        to: email,
+        subject: 'Your OPM/BAN Club Account',
+        html: `
+          <h2>Welcome to OPM/BAN Club!</h2>
+          <p>Dear ${full_name},</p>
+          <p>Your account has been created. Here are your login credentials:</p>
+          <div style="background: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0;">
+            <p><strong>Website:</strong> ${process.env.NEXT_PUBLIC_APP_URL}/login</p>
+            <p><strong>Email:</strong> ${email}</p>
+            <p><strong>Password:</strong> ${password}</p>
+          </div>
+          <p><strong>Important:</strong> Please change your password after your first login by going to your dashboard.</p>
+          <p>Best regards,<br>OPM/BAN Club Team</p>
+        `
+      })
+    }
 
     return NextResponse.json({ 
       success: true,
-      message: 'Account created successfully',
-      credentials: {
-        email,
-        password,
-        instruction: 'User can change password in their dashboard after login'
-      }
+      message: 'Account created and email sent'
     })
   } catch (error) {
-    console.error('Error creating account:', error)
+    console.error('Error:', error)
     return NextResponse.json({ 
-      error: error instanceof Error ? error.message : 'Failed to create account' 
+      error: error instanceof Error ? error.message : 'Failed' 
     }, { status: 400 })
   }
 }
