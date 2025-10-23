@@ -28,14 +28,33 @@ export async function issueCredentialForMember(params: {
   let imageUrl: string
 
   // Badges - use static files
-  if (params.kind === 'badge') {
-    const position = member.position?.toLowerCase().replace(/ /g, '-') || 'member'
-    const genderSuffix = (position === 'president' || position === 'member') ? `-${member.gender}` : ''
-    const badgeFile = position === 'member' ? `member${genderSuffix}.png` : `${position}.png`
-    
-    imageUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/generated-credentials/badges/${badgeFile}`
-    console.log('Badge URL:', imageUrl)
-  } 
+ // Badges - use static files
+if (params.kind === 'badge') {
+  let badgeFile: string
+  
+  if (member.position) {
+    // Officer badges
+    const position = member.position.toLowerCase().replace(/ /g, '-')
+    if (position === 'president') {
+      badgeFile = `president-${member.gender}.png`
+    } else {
+      // Map position names to file names
+      const positionMap: Record<string, string> = {
+        'financial-officer': 'financial.png',
+        'operations-officer': 'operations.png',
+        'media-officer': 'media.png',
+        'strategic-relations-officer': 'relations.png'
+      }
+      badgeFile = positionMap[position] || 'member.png'
+    }
+  } else {
+    // Regular member badge
+    badgeFile = `member.png`
+  }
+  
+  imageUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/generated-credentials/badges/${badgeFile}`
+  console.log('Badge URL:', imageUrl)
+}
   // Certificates and Cards - generate with text
   else {
     try {

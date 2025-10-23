@@ -1,11 +1,12 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { PasswordChangeForm } from '@/components/account/password-change-form'
 import Link from 'next/link'
-import { ExternalLink, LogOut, Download } from 'lucide-react'
+import { ExternalLink, LogOut, Download, Award, CreditCard, GraduationCap } from 'lucide-react'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -29,6 +30,11 @@ export default async function DashboardPage() {
     .order('issued_date', { ascending: false })
 
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+  
+  // Separate credentials by type
+  const badges = credentials?.filter(c => c.type === 'badge') || []
+  const membershipCards = credentials?.filter(c => c.type === 'membership_card') || []
+  const certificates = credentials?.filter(c => c.type === 'certificate') || []
 
   return (
     <div className="container mx-auto p-6 max-w-7xl">
@@ -78,7 +84,7 @@ export default async function DashboardPage() {
           </CardContent>
         </Card>
 
-        {/* Credentials */}
+        {/* Credentials with Tabs */}
         <Card className="lg:col-span-2">
           <CardHeader>
             <CardTitle>My Credentials</CardTitle>
@@ -87,85 +93,56 @@ export default async function DashboardPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            {credentials && credentials.length > 0 ? (
-              <div className="grid gap-4">
-                {credentials.map((cred) => (
-                  <Card key={cred.id} className="overflow-hidden">
-                    <div className="flex flex-col md:flex-row">
-                      {cred.image_url && (
-                        <div className="md:w-48 h-32 md:h-auto bg-gray-100">
-                          <img 
-                            src={cred.image_url} 
-                            alt={cred.name}
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                      )}
-                      <div className="flex-1 p-4">
-                        <div className="flex justify-between items-start mb-2">
-                          <div>
-                            <h4 className="font-semibold">{cred.name}</h4>
-                            <p className="text-sm text-muted-foreground capitalize">
-                              {cred.type.replace('_', ' ')}
-                            </p>
-                          </div>
-                          <Badge variant="outline" className="text-xs">
-                            {cred.verification_code}
-                          </Badge>
-                        </div>
-                        
-                        <p className="text-sm text-muted-foreground mb-3">
-                          Issued: {new Date(cred.issued_date).toLocaleDateString()}
-                        </p>
-                        
-                        <div className="flex gap-2">
-                          <Link 
-                            href={`/verify/${cred.verification_code}`}
-                            target="_blank"
-                          >
-                            <Button size="sm" variant="outline">
-                              <ExternalLink className="w-3 h-3 mr-1" />
-                              Verify
-                            </Button>
-                          </Link>
-                          <Link 
-                            href={cred.image_url}
-                            target="_blank"
-                            download
-                          >
-                            <Button size="sm" variant="outline">
-                              <Download className="w-3 h-3 mr-1" />
-                              Download
-                            </Button>
-                          </Link>
-                        </div>
-                        
-                        <div className="mt-3 p-2 bg-gray-50 rounded text-xs">
-                          <p className="text-muted-foreground">Verification URL:</p>
-                          <p className="font-mono break-all">
-                            {baseUrl}/verify/{cred.verification_code}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </Card>
+            <Tabs defaultValue="essentials" className="w-full">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="essentials">
+                  <CreditCard className="w-4 h-4 mr-2" />
+                  Essentials
+                </TabsTrigger>
+                <TabsTrigger value="certificates">
+                  <GraduationCap className="w-4 h-4 mr-2" />
+                  Certificates ({certificates.length})
+                </TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="essentials" className="space-y-4">
+                {/* Badge */}
+                {badges.map((badge) => (
+                  <CredentialCard key={badge.id} credential={badge} baseUrl={baseUrl} />
                 ))}
-              </div>
-            ) : (
-              <p className="text-muted-foreground text-center py-8">
-                No credentials issued yet. Contact your club administrator.
-              </p>
-            )}
+                
+                {/* Membership Card */}
+                {membershipCards.map((card) => (
+                  <CredentialCard key={card.id} credential={card} baseUrl={baseUrl} />
+                ))}
+                
+                {badges.length === 0 && membershipCards.length === 0 && (
+                  <p className="text-muted-foreground text-center py-4">
+                    No badge or membership card issued yet.
+                  </p>
+                )}
+              </TabsContent>
+              
+              <TabsContent value="certificates" className="space-y-4">
+                {certificates.map((cert) => (
+                  <CredentialCard key={cert.id} credential={cert} baseUrl={baseUrl} />
+                ))}
+                
+                {certificates.length === 0 && (
+                  <p className="text-muted-foreground text-center py-4">
+                    No certificates earned yet.
+                  </p>
+                )}
+              </TabsContent>
+            </Tabs>
           </CardContent>
         </Card>
       </div>
 
-      {/* Password Change Form - ADD THIS SECTION */}
       <div className="mt-6">
         <PasswordChangeForm />
       </div>
 
-      {/* Admin Link */}
       {member.role === 'admin' && (
         <div className="mt-6">
           <Link href="/admin">
@@ -176,5 +153,63 @@ export default async function DashboardPage() {
         </div>
       )}
     </div>
+  )
+}
+
+// Credential Card Component
+function CredentialCard({ credential, baseUrl }: { credential: any, baseUrl: string }) {
+  return (
+    <Card className="overflow-hidden">
+      <div className="flex flex-col md:flex-row">
+        {credential.image_url && (
+          <div className="md:w-48 h-32 md:h-auto bg-gray-100">
+            <img 
+              src={credential.image_url} 
+              alt={credential.name}
+              className="w-full h-full object-cover"
+            />
+          </div>
+        )}
+        <div className="flex-1 p-4">
+          <div className="flex justify-between items-start mb-2">
+            <div>
+              <h4 className="font-semibold">{credential.name}</h4>
+              <p className="text-sm text-muted-foreground capitalize">
+                {credential.type.replace('_', ' ')}
+              </p>
+            </div>
+            <Badge variant="outline" className="text-xs">
+              {credential.verification_code}
+            </Badge>
+          </div>
+          
+          <p className="text-sm text-muted-foreground mb-3">
+            Issued: {new Date(credential.issued_date).toLocaleDateString()}
+          </p>
+          
+          <div className="flex gap-2">
+            <Link href={`/verify/${credential.verification_code}`} target="_blank">
+              <Button size="sm" variant="outline">
+                <ExternalLink className="w-3 h-3 mr-1" />
+                Verify
+              </Button>
+            </Link>
+            <Link href={credential.image_url} target="_blank" download>
+              <Button size="sm" variant="outline">
+                <Download className="w-3 h-3 mr-1" />
+                Download
+              </Button>
+            </Link>
+          </div>
+          
+          <div className="mt-3 p-2 bg-gray-50 rounded text-xs">
+            <p className="text-muted-foreground">Verification URL:</p>
+            <p className="font-mono break-all">
+              {baseUrl}/verify/{credential.verification_code}
+            </p>
+          </div>
+        </div>
+      </div>
+    </Card>
   )
 }
