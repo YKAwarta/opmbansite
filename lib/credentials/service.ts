@@ -1,87 +1,116 @@
-'use server'
-
 import { createAdminClient } from '@/lib/supabase/admin'
-import { templateKeyForTemplate, badgeKey, type CredentialKind, type Gender, type Role } from './templates'
-import { renderOnTemplate } from './generator'
+import { generateCredential } from './generator'
 
-const TEMPLATES_BUCKET = 'credential-templates'
-const OUTPUT_BUCKET    = 'generated-credentials'
-
-function needsCanvas(kind: CredentialKind) {
-  return kind === 'certificate' || kind === 'membership_card'
-}
-
-/**
- * Issues a credential for a member:
- * - For certificate/card: renders onto template, uploads PNG under <uuid>/<type>_<ts>.png.
- * - For badge: uses static badge under generated-credentials/badges/*.png.
- * Persists via admin RPC `admin_issue_credential` and returns { id, verification_code }.
- */
 export async function issueCredentialForMember(params: {
   memberId: string
-  kind: CredentialKind
-  name: string                 // credential display name (e.g., "2025 Membership Card")
-  expiryISO?: string | null
+  kind: 'badge' | 'certificate' | 'membership_card'
+  name: string
+  expiryDate?: string
 }) {
-  const admin = createAdminClient()
-
-  // Canonical member data
-  const { data: m, error: mErr } = await admin
+  const adminClient = createAdminClient()
+  
+  console.log('Issuing credential:', params)
+  
+  // Get member data
+  const { data: member, error: memberError } = await adminClient
     .from('members')
-    .select('full_name, student_id, gender, role, position')
+    .select('*')
     .eq('id', params.memberId)
     .single()
-  if (mErr || !m) throw new Error('Member not found')
 
-  const gender = m.gender as Gender
-  const role: Role = (m.role === 'officer' || m.role === 'admin') ? 'officer' : 'member'
-
-  let imageUrl: string | null = null
-
-  if (needsCanvas(params.kind)) {
-    // Resolve template public URL
-    const key = templateKeyForTemplate(params.kind as Exclude<CredentialKind,'badge'>, gender, role, m.position)
-    const { data: pubTpl } = admin.storage.from(TEMPLATES_BUCKET).getPublicUrl(key)
-    const templateUrl = pubTpl.publicUrl
-
-    // Render
-    const issuedISO = new Date().toISOString()
-    const png = await renderOnTemplate(templateUrl, params.kind as 'certificate'|'membership_card', {
-      name: m.full_name,
-      studentId: m.student_id ?? undefined,
-      issueISO: issuedISO,
-    })
-
-    // Upload
-    const fileName = `${params.memberId}/${params.kind}_${Date.now()}.png`
-    const { error: upErr } = await admin
-      .storage.from(OUTPUT_BUCKET)
-      .upload(fileName, png, { contentType: 'image/png', upsert: false })
-    if (upErr) throw new Error(`Upload failed: ${upErr.message}`)
-
-    const { data: pubOut } = admin.storage.from(OUTPUT_BUCKET).getPublicUrl(fileName)
-    imageUrl = pubOut.publicUrl
-  } else {
-    // Static badge
-    const key = badgeKey(gender, role, m.position)
-    const { data: pubBadge } = admin.storage.from(OUTPUT_BUCKET).getPublicUrl(key)
-    imageUrl = pubBadge.publicUrl
+  if (memberError || !member) {
+    console.error('Member lookup failed:', memberError)
+    throw new Error('Member not found')
   }
 
-  // Persist credential row via RPC; returns { id, verification_code }
-  const { data: created, error: cErr } = await admin.rpc('admin_issue_credential', {
+  console.log('Member found:', member.full_name, member.position, member.gender)
+
+  let imageUrl: string
+
+  // Badges - use static files
+  if (params.kind === 'badge') {
+    const position = member.position?.toLowerCase().replace(/ /g, '-') || 'member'
+    const genderSuffix = (position === 'president' || position === 'member') ? `-${member.gender}` : ''
+    const badgeFile = position === 'member' ? `member${genderSuffix}.png` : `${position}.png`
+    
+    imageUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/generated-credentials/badges/${badgeFile}`
+    console.log('Badge URL:', imageUrl)
+  } 
+  // Certificates and Cards - generate with text
+  else {
+    try {
+      // Determine template path
+      const position = member.position?.toLowerCase().replace(/ /g, '-') || 'member'
+      const needsGender = position === 'member' || position === 'president'
+      const genderSuffix = needsGender ? `-${member.gender}` : ''
+      
+      // Fix: Use singular form for folder name
+      const folderName = params.kind === 'membership_card' ? 'cards' : 'certificates'
+      const templateFileName = params.kind === 'membership_card' ? 
+        `card-${position}${genderSuffix}.png` : 
+        `certificate-${position}${genderSuffix}.png`
+      
+      const templateUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/credential-templates/${folderName}/${templateFileName}`
+      console.log('Template URL:', templateUrl)
+      
+      // Test if template exists
+      const testFetch = await fetch(templateUrl)
+      if (!testFetch.ok) {
+        throw new Error(`Template not found at: ${templateUrl}`)
+      }
+      
+      // Generate credential with text overlay
+      const imageBuffer = await generateCredential(
+        templateUrl,
+        params.kind as 'certificate' | 'membership_card',
+        {
+          name: member.full_name,
+          studentId: member.student_id,
+          issueDate: new Date().toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+          })
+        }
+      )
+      
+      // Upload to Supabase
+      const uploadFileName = `${params.memberId}/${params.kind}_${Date.now()}.png`
+      const { error: uploadError } = await adminClient.storage
+      .from('generated-credentials')
+      .upload(uploadFileName, imageBuffer, {
+        contentType: 'image/png',
+        upsert: false
+      })
+
+    if (uploadError) {
+      console.error('Upload error:', uploadError)
+      throw uploadError
+    }
+
+    imageUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/generated-credentials/${uploadFileName}`
+  } 
+    catch (err) {
+      console.error('Generation error:', err)
+      throw err
+    }
+  }
+
+  // Create database record
+  const { data, error } = await adminClient.rpc('admin_issue_credential', {
     p_member_id: params.memberId,
     p_type: params.kind,
     p_name: params.name,
-    p_issued_date: new Date().toISOString(),
-    p_expiry_date: params.expiryISO ?? null,
     p_image_url: imageUrl,
-    p_credential_data: {
-      generated: needsCanvas(params.kind),
-      source: needsCanvas(params.kind) ? 'template-render' : 'static-badge',
-    },
+    p_expiry_date: params.expiryDate || null,
+    p_issued_date: new Date().toISOString(),
+    p_credential_data: {}
   })
-  if (cErr) throw new Error(`DB persist failed: ${cErr.message}`)
 
-  return created // { id, verification_code }
+  if (error) {
+    console.error('RPC error:', error)
+    throw error
+  }
+  
+  return data
 }

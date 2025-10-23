@@ -119,7 +119,7 @@ export function IssueCredentialForm({ members }: { members: Member[] }) {
             className="w-full px-3 py-2 border rounded-md"
             value={credentialName}
             onChange={(e) => setCredentialName(e.target.value)}
-            placeholder="e.g., '2024 Membership Certificate'"
+            placeholder="e.g., '2025 Membership Certificate'"
           />
         </div>
 

@@ -1,39 +1,49 @@
-export const runtime = 'nodejs'
-
-import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { issueCredentialForMember } from '@/lib/credentials/service'
+import { NextResponse } from 'next/server'
+
+export const runtime = 'nodejs'
 
 export async function POST(request: Request) {
   const supabase = await createClient()
-
-  const { data: { user }, error: userErr } = await supabase.auth.getUser()
-  if (userErr) return NextResponse.json({ error: userErr.message }, { status: 400 })
-  if (!user)   return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-
-  const { data: isAdmin, error: adminErr } = await supabase.rpc('is_admin')
-  if (adminErr) return NextResponse.json({ error: adminErr.message }, { status: 400 })
-  if (!isAdmin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-
-  const body = await request.json()
-  const memberId = String(body?.memberId ?? '')
-  const kind = String(body?.kind ?? '')
-  const name = String(body?.name ?? '')
-
-  if (!memberId || !name || !['certificate','membership_card','badge'].includes(kind)) {
-    return NextResponse.json({ error: 'memberId, name, and kind are required' }, { status: 400 })
+  
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
+  
+  const { data: member } = await supabase
+    .from('members')
+    .select('role')
+    .eq('id', user.id)
+    .single()
 
+  if (member?.role !== 'admin') {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  }
+  
   try {
-    const created = await issueCredentialForMember({
-      memberId,
-      kind: kind as any,
-      name,
-      expiryISO: body?.expiryISO ?? null,
+    const body = await request.json()
+    
+    const result = await issueCredentialForMember({
+      memberId: body.memberId,
+      kind: body.kind,
+      name: body.name,
+      expiryDate: body.expiryDate
     })
-    return NextResponse.json({ success: true, credential: created })
-  } catch (e) {
-    const msg = e instanceof Error ? e.message : 'Issue failed'
-    return NextResponse.json({ error: msg }, { status: 500 })
+    
+    // Result is an array from RPC, get first item
+    const credential = Array.isArray(result) ? result[0] : result
+    
+    return NextResponse.json({ 
+      success: true, 
+      credential,
+      verification_code: credential?.verification_code || 'Check dashboard'
+    })
+  } catch (error) {
+    console.error('Error issuing credential:', error)
+    return NextResponse.json({ 
+      error: error instanceof Error ? error.message : 'Failed to issue credential' 
+    }, { status: 500 })
   }
 }
