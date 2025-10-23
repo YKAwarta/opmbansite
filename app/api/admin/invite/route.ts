@@ -10,21 +10,27 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const { data: isAdmin } = await supabase.rpc('is_admin')
-  if (!isAdmin) {
+  // Verify admin
+  const { data: adminCheck } = await supabase
+    .from('members')
+    .select('role')
+    .eq('id', user.id)
+    .single()
+
+  if (adminCheck?.role !== 'admin') {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 
   const body = await request.json()
-  const { email, full_name, student_id, gender, role, position, password } = body
+  const { email, password, full_name, student_id, gender, role, position } = body
 
   const adminClient = createAdminClient()
 
   try {
-    // Create auth user with password
+    // Step 1: Create auth user
     const { data: authData, error: authError } = await adminClient.auth.admin.createUser({
       email,
-      password, // Admin sets initial password
+      password,
       email_confirm: true,
       user_metadata: {
         full_name,
@@ -35,7 +41,7 @@ export async function POST(request: Request) {
 
     if (authError) throw authError
 
-    // Create member record
+    // Step 2: Create member record (CRITICAL)
     const { error: memberError } = await adminClient
       .from('members')
       .insert({
@@ -44,20 +50,29 @@ export async function POST(request: Request) {
         full_name,
         student_id,
         role: role || 'member',
-        position: position || null,
+        position: (role === 'officer' || role === 'admin') ? position : null,
         gender,
         is_active: true
       })
 
     if (memberError) {
-      // Rollback: delete auth user if member creation fails
+      // ROLLBACK: Delete auth user if member creation fails
       await adminClient.auth.admin.deleteUser(authData.user.id)
       throw memberError
     }
 
+    // Step 3: Send email with credentials
+    // For now, we'll return the credentials for manual sending
+    // In production, integrate with an email service
+
     return NextResponse.json({ 
-      success: true, 
-      message: `Account created for ${email} with password: ${password}` 
+      success: true,
+      message: 'Account created successfully',
+      credentials: {
+        email,
+        password,
+        instruction: 'User can change password in their dashboard after login'
+      }
     })
   } catch (error) {
     console.error('Error creating account:', error)
