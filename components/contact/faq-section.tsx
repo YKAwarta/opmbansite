@@ -11,6 +11,7 @@ type FaqItem = {
 const faqs: FaqItem[] = [
   {
     question: 'What requirements do I need to meet to become a member?',
+    //Do NOT add any apostrophes in this section or you will fuck up the whole goddamn build.
     answer: (
       <div className="text-[#0d0d0b]/70">
         <p>To join the club, you must meet the following criteria:</p>
@@ -30,11 +31,12 @@ const faqs: FaqItem[] = [
       "Fill out the application form during our recruitment period and pass our interview process. Once approved, you\'ll receive an invitation email to create your account and access your digital credentials.",
   },
   {
+    //Don't add any apostrophes here either. Or you will fuck up the whole goddamn build.
     question: 'How can students earn bonus grades through the club?',
     answer: (
       <div className="text-[#0d0d0b]/70">
         <p>
-          Yes, it\'s true! You can earn bonus grades by meeting the following requirements:
+          You can earn bonus grades by meeting the following requirements:
         </p>
         <ol className="mt-2 ml-6 space-y-1" type="A">
           <li>
