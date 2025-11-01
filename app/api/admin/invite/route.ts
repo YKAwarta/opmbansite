@@ -30,7 +30,6 @@ export async function POST(request: Request) {
   const adminClient = createAdminClient()
 
   try {
-    // Create auth user
     const { data: authData, error: authError } = await adminClient.auth.admin.createUser({
       email,
       password,
@@ -40,7 +39,6 @@ export async function POST(request: Request) {
 
     if (authError) throw authError
 
-    // Create member record
     const { error: memberError } = await adminClient
       .from('members')
       .insert({
@@ -59,15 +57,9 @@ export async function POST(request: Request) {
       throw memberError
     }
 
-    // Send email with credentials
     if (process.env.RESEND_API_KEY) {
-      const fs = await import('fs/promises')
-const path = await import('path')
-const logoPath = path.join(process.cwd(), 'public', 'club_logo_32.png')
-const logoBuffer = await fs.readFile(logoPath)
-
       const emailHtml = getWelcomeEmail({
-        useEmbeddedLogo: true,
+        useEmbeddedLogo: false,
         fullName: full_name,
         email: email,
         password: password,
@@ -78,14 +70,7 @@ const logoBuffer = await fs.readFile(logoPath)
         from: 'The OPM&BAN Club <noreply@theopmbanclub.com>',
         to: email,
         subject: '🎉 Welcome to The OPM&BAN Club - Your Account is Ready!',
-        html: emailHtml,
-        attachments: [
-          {
-            filename: 'club_logo_32.png',
-            content: logoBuffer,
-            contentId: 'logo'
-          }
-        ]
+        html: emailHtml
       })
     }
 
