@@ -61,7 +61,7 @@ export async function POST(request: Request) {
     // Send email with credentials
     if (process.env.RESEND_API_KEY) {
       await resend.emails.send({
-        from: 'OPM/BAN Club <noreply@yourdomain.com>', // Update with your domain
+        from: 'OPM/BAN Club <noreply@theopmbanclub.com>', // Update with your domain
         to: email,
         subject: 'Your OPM/BAN Club Account',
         html: `

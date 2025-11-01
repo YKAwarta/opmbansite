@@ -15,6 +15,15 @@ const geistMono = Geist_Mono({
 
 export const metadata = {
   title: 'The OPM & BAN Club | Alfaisal University',
+  description: 'Official website of The OPM & BAN Club at Alfaisal University.',
+  keywords: "OPM, BAN, Al Faisal University, project management, business analytics, certifications",
+  openGraph: {
+    title: 'The OPM & BAN Club | Alfaisal University',
+    description: 'Official website of The OPM & BAN Club at Alfaisal University.',
+    url: 'https://theopmbanclub.com',
+    siteName: 'The OPM & BAN Club',
+    type: 'website',
+  },
   icons: {
     icon: [
       { url: '/club_logo_32.png', sizes: '32x32', type: 'image/png' },
