@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { NextResponse } from 'next/server'
 import { Resend } from 'resend'
+import { getWelcomeEmail } from '@/lib/email/templates'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
@@ -60,22 +61,18 @@ export async function POST(request: Request) {
 
     // Send email with credentials
     if (process.env.RESEND_API_KEY) {
+      const emailHtml = getWelcomeEmail({
+        fullName: full_name,
+        email: email,
+        password: password,
+        loginUrl: `${process.env.NEXT_PUBLIC_APP_URL}/login`
+      })
+
       await resend.emails.send({
-        from: 'OPM/BAN Club <noreply@theopmbanclub.com>', // Update with your domain
+        from: 'The OPM&BAN Club <noreply@theopmbanclub.com>',
         to: email,
-        subject: 'Your OPM/BAN Club Account',
-        html: `
-          <h2>Welcome to OPM/BAN Club!</h2>
-          <p>Dear ${full_name},</p>
-          <p>Your account has been created. Here are your login credentials:</p>
-          <div style="background: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0;">
-            <p><strong>Website:</strong> ${process.env.NEXT_PUBLIC_APP_URL}/login</p>
-            <p><strong>Email:</strong> ${email}</p>
-            <p><strong>Password:</strong> ${password}</p>
-          </div>
-          <p><strong>Important:</strong> Please change your password after your first login by going to your dashboard.</p>
-          <p>Best regards,<br>OPM/BAN Club Team</p>
-        `
+        subject: '🎉 Welcome to The OPM&BAN Club - Your Account is Ready!',
+        html: emailHtml
       })
     }
 
