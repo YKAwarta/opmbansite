@@ -4,6 +4,10 @@ import { NextResponse } from 'next/server'
 import { Resend } from 'resend'
 import { getWelcomeEmail } from '@/lib/email/templates'
 
+const fs = await import('fs/promises')
+const path = await import('path')
+const logoPath = path.join(process.cwd(), 'public', 'club_logo_32.png')
+const logoBuffer = await fs.readFile(logoPath)
 const resend = new Resend(process.env.RESEND_API_KEY)
 
 export async function POST(request: Request) {
@@ -62,6 +66,7 @@ export async function POST(request: Request) {
     // Send email with credentials
     if (process.env.RESEND_API_KEY) {
       const emailHtml = getWelcomeEmail({
+        useEmbeddedLogo: true,
         fullName: full_name,
         email: email,
         password: password,
@@ -72,7 +77,14 @@ export async function POST(request: Request) {
         from: 'The OPM&BAN Club <noreply@theopmbanclub.com>',
         to: email,
         subject: '🎉 Welcome to The OPM&BAN Club - Your Account is Ready!',
-        html: emailHtml
+        html: emailHtml,
+        attachments: [
+          {
+            filename: 'club_logo_32.png',
+            content: logoBuffer,
+            contentId: 'logo'
+          }
+        ]
       })
     }
 

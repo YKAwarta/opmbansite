@@ -1,5 +1,5 @@
 /**
- * Email Templates for OPM&BAN Club
+ * Email Templates for THE OPM&BAN Club
  */
 
 type WelcomeEmailParams = {
@@ -7,14 +7,20 @@ type WelcomeEmailParams = {
   email: string
   password: string
   loginUrl: string
+  useEmbeddedLogo?: boolean  // If true, uses cid:logo instead of URL
 }
 
 /**
  * Welcome email template for new members
  */
 export function getWelcomeEmail(params: WelcomeEmailParams): string {
-  const { fullName, email, password, loginUrl } = params
-  const logoUrl = `${process.env.NEXT_PUBLIC_APP_URL}/club_logo_32.png`
+  const { fullName, email, password, loginUrl, useEmbeddedLogo = false } = params
+  
+  // Use embedded logo (cid:logo) or external URL
+  const logoUrl = useEmbeddedLogo 
+    ? 'cid:logo' 
+    : `${process.env.NEXT_PUBLIC_APP_URL}/club_logo_32.png`
+  
   const currentYear = new Date().getFullYear()
 
   return `
@@ -23,7 +29,7 @@ export function getWelcomeEmail(params: WelcomeEmailParams): string {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Welcome to the OPM&BAN Club!</title>
+  <title>Welcome to The OPM&BAN Club!</title>
 </head>
 <body style="margin: 0; padding: 0; font-family: 'Arial', 'Helvetica', sans-serif; background-color: #f4f4f4;">
   <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f4f4f4; padding: 40px 0;">
@@ -36,10 +42,10 @@ export function getWelcomeEmail(params: WelcomeEmailParams): string {
           <tr>
             <td style="background: linear-gradient(135deg, #093968 0%, #0abd62 100%); padding: 40px 30px; text-align: center;">
               <!-- Club Logo -->
-              <div style="width: 100px; height: 100px; background-color: white; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 8px rgba(0,0,0,0.15); padding: 20px;">
-                <img src="${logoUrl}" alt="OPM&BAN Club Logo" style="width: 60px; height: 60px; display: block;">
+              <div style="width: 100px; height: 100px; background-color: white; border-radius: 50%; margin: 0 auto 20px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.15); display: flex; align-items: center; justify-content: center;">
+                <img src="${logoUrl}" alt="OPM&BAN Club Logo" style="max-width: 70%; max-height: 70%; width: auto; height: auto; display: block; object-fit: contain;">
               </div>
-              <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 700;">Welcome to the OPM&BAN Club!</h1>
+              <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 700;">Welcome to The OPM&BAN Club!</h1>
               <p style="color: rgba(255,255,255,0.9); margin: 10px 0 0 0; font-size: 16px;">Your account has been created</p>
             </td>
           </tr>
@@ -51,7 +57,7 @@ export function getWelcomeEmail(params: WelcomeEmailParams): string {
                 Dear <strong>${fullName}</strong>,
               </p>
               <p style="color: #666; font-size: 15px; line-height: 1.6; margin: 0 0 30px 0;">
-                We're excited to have you as part of the OPM & BAN Club at Alfaisal University! Your account has been successfully created, and you can now access your digital wallet and club resources.
+                We're excited to have you as part of The OPM & BAN Club at Alfaisal University! Your account has been successfully created, and you can now access your digital wallet and club resources.
               </p>
               
               <!-- Credentials Box -->
@@ -112,7 +118,7 @@ export function getWelcomeEmail(params: WelcomeEmailParams): string {
               <ul style="color: #666; font-size: 15px; line-height: 1.8; padding-left: 20px; margin: 0 0 30px 0;">
                 <li>Log in to your account and explore your digital wallet</li>
                 <li>Update your profile and change your password</li>
-                <li>Join our Discord server and get verified for updates and events</li>
+                <li>Join our Discord server for updates and events</li>
                 <li>Check out upcoming workshops and certification programs</li>
               </ul>
               
