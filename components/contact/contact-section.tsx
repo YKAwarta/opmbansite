@@ -23,7 +23,7 @@ export function ContactSection() {
                     </a>
                   </div>
                   <p className="text-sm text-brand-olive/60">
-                    Please refer to club email
+                    For inquiries about male section activities and membership
                   </p>
                 </div>
               </div>
@@ -37,7 +37,7 @@ export function ContactSection() {
                   <div className="flex items-center justify-center text-brand-olive/70">
                     <Mail className="w-5 h-5 mr-2" />
                     <a href="mailto:rnakia@alfaisal.edu" className="hover:text-brand-pink">
-                      rnakia@alfaisal.edu
+                      Please refer to club email
                     </a>
                   </div>
                   <p className="text-sm text-brand-olive/60">
