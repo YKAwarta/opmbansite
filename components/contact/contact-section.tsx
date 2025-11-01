@@ -19,11 +19,11 @@ export function ContactSection() {
                   <div className="flex items-center justify-center text-brand-olive/70">
                     <Mail className="w-5 h-5 mr-2" />
                     <a href="mailto:yawartani@alfaisal.edu" className="hover:text-brand-blue">
-                      yawartani@alfaisal.edu
+                      Please refer to club email
                     </a>
                   </div>
                   <p className="text-sm text-brand-olive/60">
-                    For inquiries about male section activities and membership
+                    Please refer to club email
                   </p>
                 </div>
               </div>
