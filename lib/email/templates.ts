@@ -3,27 +3,27 @@
  */
 
 type WelcomeEmailParams = {
-  fullName: string
-  email: string
-  password: string
-  loginUrl: string
-  useEmbeddedLogo?: boolean  // If true, uses cid:logo instead of URL
+    fullName: string
+    email: string
+    password: string
+    loginUrl: string
+    useEmbeddedLogo?: boolean  // If true, uses cid:logo instead of URL
 }
 
 /**
  * Welcome email template for new members
  */
 export function getWelcomeEmail(params: WelcomeEmailParams): string {
-  const { fullName, email, password, loginUrl, useEmbeddedLogo = false } = params
-  
-  // Use embedded logo (cid:logo) or external URL
-  const logoUrl = useEmbeddedLogo 
-    ? 'cid:logo' 
-    : `${process.env.NEXT_PUBLIC_APP_URL}/club_logo_32.png`
-  
-  const currentYear = new Date().getFullYear()
+    const { fullName, email, password, loginUrl, useEmbeddedLogo = false } = params
 
-  return `
+    // Use embedded logo (cid:logo) or external URL
+    const logoUrl = useEmbeddedLogo
+        ? 'cid:logo'
+        : `${process.env.NEXT_PUBLIC_APP_URL}/club_logo_email.png`
+
+    const currentYear = new Date().getFullYear()
+
+    return `
 <!DOCTYPE html>
 <html>
 <head>
@@ -42,8 +42,8 @@ export function getWelcomeEmail(params: WelcomeEmailParams): string {
           <tr>
             <td style="background: linear-gradient(135deg, #093968 0%, #0abd62 100%); padding: 40px 30px; text-align: center;">
               <!-- Club Logo -->
-              <div style="width: 100px; height: 100px; background-color: white; border-radius: 50%; margin: 0 auto 20px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.15); display: flex; align-items: center; justify-content: center;">
-                <img src="${logoUrl}" alt="OPM&BAN Club Logo" style="max-width: 70%; max-height: 70%; width: auto; height: auto; display: block; object-fit: contain;">
+              <div style="width: 100px; height: 100px; background-color: white; border-radius: 50%; margin: 0 auto 20px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.15);">
+                <img src="${logoUrl}" alt="OPM&BAN Club Logo" style="width: 100%; height: 100%; display: block; object-fit: cover;">
               </div>
               <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 700;">Welcome to The OPM&BAN Club!</h1>
               <p style="color: rgba(255,255,255,0.9); margin: 10px 0 0 0; font-size: 16px;">Your account has been created</p>
