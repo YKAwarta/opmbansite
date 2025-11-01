@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { PasswordChangeForm } from '@/components/account/password-change-form'
 import Link from 'next/link'
-import { ExternalLink, LogOut, Download, Award, CreditCard, GraduationCap } from 'lucide-react'
+import { ExternalLink, LogOut, Download, CreditCard, GraduationCap } from 'lucide-react'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -29,7 +29,7 @@ export default async function DashboardPage() {
     .eq('is_active', true)
     .order('issued_date', { ascending: false })
 
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://theopmbanclub.com'
   
   // Separate credentials by type
   const badges = credentials?.filter(c => c.type === 'badge') || []
@@ -156,8 +156,17 @@ export default async function DashboardPage() {
   )
 }
 
+interface CredentialType {
+  id: string
+  name: string
+  type: string
+  image_url: string
+  verification_code: string
+  issued_date: string
+}
+
 // Credential Card Component
-function CredentialCard({ credential, baseUrl }: { credential: any, baseUrl: string }) {
+function CredentialCard({ credential, baseUrl }: { credential: CredentialType, baseUrl: string }) {
   return (
     <Card className="overflow-hidden">
       <div className="flex flex-col md:flex-row">

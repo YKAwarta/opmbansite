@@ -27,14 +27,14 @@ const faqs: FaqItem[] = [
   {
     question: 'How do I join the OPM & BAN Club?',
     answer:
-      "Fill out the application form during our recruitment period and pass our interview process. Once approved, you'll receive an invitation email to create your account and access your digital credentials.",
+      "Fill out the application form during our recruitment period and pass our interview process. Once approved, you\'ll receive an invitation email to create your account and access your digital credentials.",
   },
   {
     question: 'How can students earn bonus grades through the club?',
     answer: (
       <div className="text-[#0d0d0b]/70">
         <p>
-          Yes, it's true! You can earn bonus grades by meeting the following requirements:
+          Yes, it\'s true! You can earn bonus grades by meeting the following requirements:
         </p>
         <ol className="mt-2 ml-6 space-y-1" type="A">
           <li>
@@ -65,14 +65,14 @@ const faqs: FaqItem[] = [
       'Yes, we have separate sections and events for male and female members with dedicated officers and Discord servers, while maintaining collaborative activities and shared resources in compliance with the university\'s and ministry\'s regulatory policies.',
   },
   {
-    question: "Can I join if I'm not a business major?",
+    question: "Can I join if I\'m not a business major?",
     answer:
       'Those from non-COB majors who are enrolled in either an OPM or BAN minor are eligible to join the club.',
   },
   {
     question: 'How do I access my digital credentials?',
     answer:
-      "Once you're a member, log in to your account on our website to access your e-wallet containing your membership ID, badges, and certificate.",
+      "Once you\'re a member, log in to your account on our website to access your e-wallet containing your membership ID, badges, and certificate.",
   },
   {
     question: 'What kind of events does the club organize?',
