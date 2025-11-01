@@ -48,7 +48,7 @@ export function DiscordSection() {
             <Card className="p-8 border-2 border-brand-blue hover:shadow-lg transition">
               <h3 className="text-xl font-bold text-brand-blue mb-4">Male Section Discord</h3>
               <p className="text-brand-olive/60 mb-6">
-                Join discussions, study groups, and networking opportunities
+                Join discussions, study groups, and educational opportunities
               </p>
               <Button 
                 onClick={() => setMaleQROpen(true)}
@@ -85,7 +85,7 @@ export function DiscordSection() {
             {maleQR && <img src={maleQR} alt="Male Discord QR" />}
           </div>
           <p className="text-center text-sm text-brand-blue/60">
-            Scan this QR code to join the male section Discord server
+            Scan this QR code to join the male section Discord server. Once you are verified, you will gain access to all channels.
           </p>
         </DialogContent>
       </Dialog>
@@ -100,7 +100,7 @@ export function DiscordSection() {
             {femaleQR && <img src={femaleQR} alt="Female Discord QR" />}
           </div>
           <p className="text-center text-sm text-brand-pink/60">
-            Scan this QR code to join the female section Discord server
+            Scan this QR code to join the female section Discord server. Once you are verified, you will gain access to all channels.
           </p>
         </DialogContent>
       </Dialog>
