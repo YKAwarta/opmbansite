@@ -62,11 +62,16 @@ export async function POST(request: Request) {
 
     // Step 3: Auto-issue credentials
     const currentYear = new Date().getFullYear()
-    const credentialResults = {
-      badge: null as any,
-      certificate: null as any,
-      membership_card: null as any,
-      errors: [] as string[]
+    const credentialResults: {
+      badge: unknown
+      certificate: unknown
+      membership_card: unknown
+      errors: string[]
+    } = {
+      badge: null,
+      certificate: null,
+      membership_card: null,
+      errors: []
     }
 
     // Issue Badge
