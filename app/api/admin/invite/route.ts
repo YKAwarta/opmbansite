@@ -80,7 +80,7 @@ export async function POST(request: Request) {
       const badgeResult = await issueCredentialForMember({
         memberId: authData.user.id,
         kind: 'badge',
-        name: `Role Badge - ${currentYear}`
+        name: `Badge (${full_name}) - ${currentYear}`
       })
       credentialResults.badge = badgeResult
       console.log('✅ Badge issued successfully')
@@ -95,7 +95,7 @@ export async function POST(request: Request) {
       const certResult = await issueCredentialForMember({
         memberId: authData.user.id,
         kind: 'certificate',
-        name: `Membership Certificate - ${currentYear}`
+        name: `Membership Certificate (${full_name}) - ${currentYear}`
       })
       credentialResults.certificate = certResult
       console.log('✅ Membership Certificate issued successfully')
@@ -110,7 +110,7 @@ export async function POST(request: Request) {
       const cardResult = await issueCredentialForMember({
         memberId: authData.user.id,
         kind: 'membership_card',
-        name: `Membership Card - ${currentYear}`
+        name: `Membership Card (${full_name}) - ${currentYear}`
       })
       credentialResults.membership_card = cardResult
       console.log('✅ Membership Card issued successfully')
