@@ -35,7 +35,7 @@ export function Navigation() {
             <Link href="/support" className="text-brand-olive/90 hover:text-brand-azure transition">
               Support
             </Link>
-            <Link href="/" className="text-brand-olive/90 hover:text-brand-azure transition">
+            <Link href="/team" className="text-brand-olive/90 hover:text-brand-azure transition">
               Team
             </Link>
             <Link href="/contact" className="text-brand-olive/90 hover:text-brand-azure transition">

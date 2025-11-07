@@ -9,7 +9,7 @@ export function PagePlaceholder({ pageName }: { pageName: string }) {
                 {/* Blinking Logo */}
                 <div className="mb-8 animate-pulse">
                     <img
-                        src="/club_logo_200.png"
+                        src="/club_logo_email.png"
                         alt="OPM/BAN Club Logo"
                         className="w-32 h-32 mx-auto opacity-60"
                     />
