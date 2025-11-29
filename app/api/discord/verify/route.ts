@@ -7,7 +7,20 @@ export async function POST(request: Request) {
 
         // Verify secret key to prevent unauthorized access
         const authHeader = request.headers.get('authorization')
-        if (authHeader !== `Bearer ${process.env.DISCORD_BOT_SECRET}`) {
+        const expectedAuth = `Bearer ${process.env.DISCORD_BOT_SECRET}`
+
+        console.log('=== API AUTH DEBUG ===')
+        console.log('Received header:', JSON.stringify(authHeader))
+        console.log('Expected header:', JSON.stringify(expectedAuth))
+        console.log('Received length:', authHeader?.length)
+        console.log('Expected length:', expectedAuth.length)
+        console.log('Secret from env:', JSON.stringify(process.env.DISCORD_BOT_SECRET))
+        console.log('Secret length:', process.env.DISCORD_BOT_SECRET?.length)
+        console.log('Match:', authHeader === expectedAuth)
+        console.log('=== END DEBUG ===')
+
+        if (authHeader !== expectedAuth) {
+            console.log('AUTH FAILED - Returning 401')
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
         }
 
