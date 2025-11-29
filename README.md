@@ -1,36 +1,84 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🎓 OPM&BAN Club - Digital Credential Management System
+A comprehensive Next.js web application for the Operations & Project Management and Business Analytics Club at Alfaisal University. This platform automates the issuance and verification of digital credentials including badges, membership cards, and certificates. Available at theopmbansite.com
 
-## Getting Started
+# 📝 Features
+## 1. Secure Authentication & Authorization
 
-First, run the development server:
+Role-Based Access Control (RBAC): Three-tier system (Member, Officer, Admin)
+Row Level Security (RLS): PostgreSQL policies ensure data isolation
+Middleware Protection: Route-level authentication guards
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 2. Automated Credential Management
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Dynamic Generation: Automatic credential creation upon member registration
+Multi-Format Support: Badges, membership cards, and certificates
+Custom Branding: Gender-specific and position-specific credential templates
+Verification System: Unique 16-character verification codes with public verification URLs
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 3. Member Dashboard
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Profile Management: View personal information and update passwords
+Digital Wallet: Access all earned credentials in one place
+Download & Share: Direct download links and LinkedIn-ready verification URLs
+Real-time Updates: Instantly view newly issued credentials
 
-## Learn More
+## 4. Admin Panel
 
-To learn more about Next.js, take a look at the following resources:
+Member Management: Create and manage user accounts
+Credential Issuance: Issue specific credentials to members
+Member Directory: View and filter all club members
+Analytics Dashboard: Track membership and credential statistics
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 5. Public Verification
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Anonymous Access: Anyone can verify credentials using verification codes
+No Login Required: Public endpoint for transparency
+Detailed Information: Shows member name, student ID, issue date, and expiry
+Active Status Checking: Only displays valid, non-expired credentials
 
-## Deploy on Vercel
+# 🛠️ Tech Stack
+## Frontend
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Framework: Next.js 15 (App Router)
+Language: TypeScript
+Styling: Tailwind CSS
+Components: shadcn/ui + Radix UI
+Icons: Lucide React
+Forms: React Hook Form + Zod validation
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Backend
+
+Database: PostgreSQL (via Supabase)
+Authentication: Supabase Auth
+Storage: Supabase Storage (Cloud-based)
+Email: Resend API for transactional emails
+Image Processing: Sharp & canvas (for credential generation)
+
+## Infrastructure
+
+Hosting: Vercel (Optimized for Next.js)
+Domain: Cloudflare DNS
+Database: Supabase (PostgreSQL with realtime capabilities)
+File Storage: Supabase Storage buckets
+
+# 🔒 Security Features
+## Database Security
+
+Row Level Security (RLS) enabled on all tables
+Secure Functions with SECURITY DEFINER for privileged operations
+Input Validation using Zod schemas on all forms
+SQL Injection Protection via parameterized queries
+
+## Authentication
+
+JWT Tokens for session management
+Password Requirements: Minimum 8 characters enforced
+Service Role Key isolation for admin operations
+Secure Cookie Handling with httpOnly flags
+
+## API Security
+
+Middleware Protection: All sensitive routes require authentication
+Role Verification: Admin-only endpoints check user roles before execution
+CORS Configuration: Restricted to allowed origins
+Rate Limiting: Implemented at Vercel edge level
