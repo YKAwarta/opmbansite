@@ -35,7 +35,7 @@ export async function generateCredential(
     ctx.fillStyle = '#000000'
     ctx.textAlign = 'center'
     ctx.textBaseline = 'middle'
-    ctx.fillText(data.name, width / 2, height * 0.45)
+    ctx.fillText(data.name, width / 2, height * 0.43)
   } else {
     // Membership card - all fields
     // Name
