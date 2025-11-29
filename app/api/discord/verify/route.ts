@@ -6,7 +6,7 @@ export async function POST(request: Request) {
         const { email, discordId, serverGender } = await request.json()
 
         // Verify secret key to prevent unauthorized access
-        const authHeader = request.headers.get('authorization')
+        const authHeader = request.headers.get('Authorization')
         const expectedAuth = `Bearer ${process.env.DISCORD_BOT_SECRET}`
 
         console.log('=== API AUTH DEBUG ===')
