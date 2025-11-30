@@ -5,8 +5,23 @@ export async function POST(request: Request) {
     try {
         const { email, discordId, serverGender } = await request.json()
 
+        console.log("=== ALL HEADERS ===")
+        request.headers.forEach((value, key) => {
+            console.log(`${key}: ${value}`)
+        })
+        console.log("=== END HEADERS ===")
+
         // Verify secret key to prevent unauthorized access
-        const authHeader = request.headers.get('Authorization')
+        const authHeader = request.headers.get('authorization')
+        const authHeaderLower = request.headers.get('Authorization')  // Capital A
+        const authHeaderUpper = request.headers.get('AUTHORIZATION')  // All caps
+    
+        console.log('=== AUTH HEADER VARIATIONS ===')
+        console.log('authorization (lowercase):', authHeader)
+        console.log('Authorization (capital A):', authHeaderLower)
+        console.log('AUTHORIZATION (uppercase):', authHeaderUpper)
+        console.log('=== END VARIATIONS ===')
+
         const expectedAuth = `Bearer ${process.env.DISCORD_BOT_SECRET}`
 
         console.log('=== API AUTH DEBUG ===')
