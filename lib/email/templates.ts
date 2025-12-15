@@ -29,7 +29,7 @@ export function getWelcomeEmail(params: WelcomeEmailParams): string {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Welcome to The OPM&BAN Club!</title>
+  <title>Welcome to The OPM & BAN Club!</title>
 </head>
 <body style="margin: 0; padding: 0; font-family: 'Arial', 'Helvetica', sans-serif; background-color: #f4f4f4;">
   <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f4f4f4; padding: 40px 0;">
@@ -46,7 +46,7 @@ export function getWelcomeEmail(params: WelcomeEmailParams): string {
                 <img src="${logoUrl}" alt="OPM&BAN Club Logo" style="width: 100%; height: 100%; display: block; object-fit: cover;">
               </div>
               <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 700;">Welcome to The OPM&BAN Club!</h1>
-              <p style="color: rgba(255,255,255,0.9); margin: 10px 0 0 0; font-size: 16px;">Your account has been created</p>
+              <p style="color: rgba(255,255,255,0.9); margin: 10px 0 0 0; font-size: 16px;">You have been accepted and your account has been created!</p>
             </td>
           </tr>
           
@@ -57,7 +57,7 @@ export function getWelcomeEmail(params: WelcomeEmailParams): string {
                 Dear <strong>${fullName}</strong>,
               </p>
               <p style="color: #666; font-size: 15px; line-height: 1.6; margin: 0 0 30px 0;">
-                We're excited to have you as part of The OPM & BAN Club at Alfaisal University! Your account has been successfully created, and you can now access your digital wallet and club resources.
+                Congratulations on your acceptance into The OPM & BAN Club! We're excited to have you as part of The OPM & BAN Club at Alfaisal University! Your account has been successfully created, and you can now access your digital wallet and club resources.
               </p>
               
               <!-- Credentials Box -->
@@ -132,7 +132,7 @@ export function getWelcomeEmail(params: WelcomeEmailParams): string {
           <tr>
             <td style="background-color: #f8f9fa; padding: 30px; text-align: center; border-top: 2px solid #e9ecef;">
               <p style="color: #093968; font-weight: 700; margin: 0 0 10px 0; font-size: 16px;">
-                OPM & BAN Club
+                The OPM & BAN Club
               </p>
               <p style="color: #666; font-size: 14px; margin: 0 0 15px 0;">
                 Operations & Project Management | Business Analytics<br>
@@ -146,7 +146,7 @@ export function getWelcomeEmail(params: WelcomeEmailParams): string {
                 <a href="${process.env.NEXT_PUBLIC_APP_URL}/contact" style="color: #0abd62; text-decoration: none; margin: 0 10px; font-size: 14px;">Contact</a>
               </div>
               <p style="color: #999; font-size: 12px; margin: 15px 0 0 0;">
-                © ${currentYear} The OPM&BAN Club. All rights reserved.
+                © ${currentYear} The OPM & BAN Club. All rights reserved.
               </p>
             </td>
           </tr>

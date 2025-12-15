@@ -1,11 +1,10 @@
 'use client'
 
-import { useState } from 'react'
-import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import QRCode from 'qrcode'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 export function DiscordSection() {
   const [maleQROpen, setMaleQROpen] = useState(false)
@@ -15,7 +14,7 @@ export function DiscordSection() {
 
   useEffect(() => {
     // Generate QR codes
-    QRCode.toDataURL('https://discord.gg/your-male-server-invite', {
+    QRCode.toDataURL('https://discord.gg/SDvtbC7j', {
       width: 300,
       margin: 2,
       color: {
@@ -24,7 +23,7 @@ export function DiscordSection() {
       }
     }).then(setMaleQR)
 
-    QRCode.toDataURL('https://discord.gg/your-female-server-invite', {
+    QRCode.toDataURL('https://discord.gg/xTeHsCvY', {
       width: 300,
       margin: 2,
       color: {
