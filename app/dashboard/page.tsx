@@ -1,12 +1,13 @@
-import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { PasswordChangeForm } from '@/components/account/password-change-form'
+import { CredentialCard } from '@/components/dashboard/credential-card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { PasswordChangeForm } from '@/components/account/password-change-form'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { createClient } from '@/lib/supabase/server'
+import { CreditCard, GraduationCap, LogOut } from 'lucide-react'
 import Link from 'next/link'
-import { ExternalLink, LogOut, Download, CreditCard, GraduationCap } from 'lucide-react'
+import { redirect } from 'next/navigation'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -153,72 +154,5 @@ export default async function DashboardPage() {
         </div>
       )}
     </div>
-  )
-}
-
-interface CredentialType {
-  id: string
-  name: string
-  type: string
-  image_url: string
-  verification_code: string
-  issued_date: string
-}
-
-// Credential Card Component
-function CredentialCard({ credential, baseUrl }: { credential: CredentialType, baseUrl: string }) {
-  return (
-    <Card className="overflow-hidden">
-      <div className="flex flex-col md:flex-row">
-        {credential.image_url && (
-          <div className="md:w-48 h-32 md:h-auto bg-gray-100">
-            <img 
-              src={credential.image_url} 
-              alt={credential.name}
-              className="w-full h-full object-cover"
-            />
-          </div>
-        )}
-        <div className="flex-1 p-4">
-          <div className="flex justify-between items-start mb-2">
-            <div>
-              <h4 className="font-semibold">{credential.name}</h4>
-              <p className="text-sm text-muted-foreground capitalize">
-                {credential.type.replace('_', ' ')}
-              </p>
-            </div>
-            <Badge variant="outline" className="text-xs">
-              {credential.verification_code}
-            </Badge>
-          </div>
-          
-          <p className="text-sm text-muted-foreground mb-3">
-            Issued: {new Date(credential.issued_date).toLocaleDateString()}
-          </p>
-          
-          <div className="flex gap-2">
-            <Link href={`/verify/${credential.verification_code}`} target="_blank">
-              <Button size="sm" variant="outline">
-                <ExternalLink className="w-3 h-3 mr-1" />
-                Verify
-              </Button>
-            </Link>
-            <Link href={credential.image_url} target="_blank" download>
-              <Button size="sm" variant="outline">
-                <Download className="w-3 h-3 mr-1" />
-                Download
-              </Button>
-            </Link>
-          </div>
-          
-          <div className="mt-3 p-2 bg-gray-50 rounded text-xs">
-            <p className="text-muted-foreground">Verification URL:</p>
-            <p className="font-mono break-all">
-              {baseUrl}/verify/{credential.verification_code}
-            </p>
-          </div>
-        </div>
-      </div>
-    </Card>
   )
 }
