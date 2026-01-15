@@ -71,7 +71,7 @@ export function TeamSection() {
   const female = splitByPresident(femaleOfficers)
 
   return (
-    <div className="container mx-auto px-6 py-16">
+    <div className="container mx-auto px-6 py-16 text-gray-900 dark:text-gray-100">
       <h2 className="text-3xl font-bold text-brand-azure mb-8 text-center">Club Officers</h2>
 
       <Tabs defaultValue="male" className="w-full">

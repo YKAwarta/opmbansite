@@ -1,7 +1,7 @@
-import type { Metadata } from "next"
-import { Geist, Geist_Mono } from "next/font/google"
-import "./globals.css"
-import {Toaster} from "@/components/ui/toaster"
+import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/toaster";
+import { Geist, Geist_Mono } from "next/font/google";
+import "./globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 export const metadata = {
   title: 'The OPM & BAN Club | Alfaisal University',
   description: 'Official website of The OPM & BAN Club at Alfaisal University.',
-  keywords: "OPM, BAN, Al Faisal University, project management, business analytics, certifications",
+  keywords: "OPM, BAN, Alfaisal University, project management, business analytics, certifications",
   openGraph: {
     title: 'The OPM & BAN Club | Alfaisal University',
     description: 'Official website of The OPM & BAN Club at Alfaisal University.',
@@ -39,12 +39,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <ThemeProvider 
+        attribute="class" 
+        defaultTheme="system" 
+        enableSystem={true}
+        disableTransitionOnChange
+        >
         {children}
         <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );

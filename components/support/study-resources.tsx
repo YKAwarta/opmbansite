@@ -1,9 +1,9 @@
 import { Card } from '@/components/ui/card'
-import { Download, Users, Calendar } from 'lucide-react'
+import { Calendar, Download, Users } from 'lucide-react'
 
 export function StudyResources() {
   return (
-    <section className="py-16 bg-gray-50">
+    <section className="py-16 bg-gray-50 dark:bg-gray-800">
       <div className="container mx-auto px-6">
         <h2 className="text-3xl font-bold text-[#093968] mb-12 text-center">
           Study Resources & Support

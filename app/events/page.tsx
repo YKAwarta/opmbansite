@@ -1,6 +1,5 @@
-import { Navigation } from '@/components/layout/navigation'
 import { Footer } from '@/components/layout/footer'
-import { EventsSection } from '@/components/events/events-section'
+import { Navigation } from '@/components/layout/navigation'
 import { PagePlaceholder } from '@/components/shared/page-placeholder'
 
 export default function EventsPage() {
@@ -28,7 +27,6 @@ export default function EventsPage() {
             </p>
           </div>
         </div>
-
         <PagePlaceholder pageName="Events" />
       </main>
       <Footer />

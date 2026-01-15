@@ -102,7 +102,7 @@ export function PasswordChangeForm() {
             <button
               type="button"
               onClick={() => setShowPasswords(!showPasswords)}
-              className="text-sm text-gray-600 hover:text-gray-800 flex items-center"
+              className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 flex items-center"
             >
               {showPasswords ? <EyeOff className="w-4 h-4 mr-1" /> : <Eye className="w-4 h-4 mr-1" />}
               {showPasswords ? 'Hide' : 'Show'} passwords

@@ -1,7 +1,6 @@
 import { Navigation } from '@/components/layout/navigation'
 import { Footer } from '@/components/layout/footer'
 import { TeamSection } from '@/components/team/team-section'
-import { PagePlaceholder } from '@/components/shared/page-placeholder'
 
 export default function TeamPage() {
   return (
@@ -16,7 +15,7 @@ export default function TeamPage() {
             </p>
           </div>
         </div>
-        <PagePlaceholder pageName="Team" />
+        <TeamSection />
       </main>
       <Footer />
     </>

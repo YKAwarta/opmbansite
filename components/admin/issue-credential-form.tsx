@@ -88,7 +88,7 @@ export function IssueCredentialForm({ members }: { members: Member[] }) {
         </div>
 
         {selectedMemberData && (
-          <div className="p-4 bg-gray-50 rounded-lg">
+          <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
             <p className="text-sm"><strong>Name:</strong> {selectedMemberData.full_name}</p>
             <p className="text-sm"><strong>Role:</strong> {selectedMemberData.role}</p>
             {selectedMemberData.position && (

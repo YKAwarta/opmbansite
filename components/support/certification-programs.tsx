@@ -1,5 +1,4 @@
 import { Card } from '@/components/ui/card'
-import { CheckCircle, BookOpen, Trophy, TrendingUp } from 'lucide-react'
 
 const certifications = [
   {
@@ -65,7 +64,7 @@ const certifications = [
 
 export function CertificationPrograms() {
   return (
-    <section className="py-16 bg-white">
+    <section className="py-16 bg-white dark:bg-gray-900">
       <div className="container mx-auto px-6">
         <h2 className="text-3xl font-bold text-[#093968] mb-12 text-center">
           Certification Programs We Support

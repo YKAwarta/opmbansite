@@ -34,7 +34,7 @@ export function DiscordSection() {
   }, [])
 
   return (
-    <section className="py-16 bg-gray-50">
+    <section className="py-16 bg-gray-50 dark:bg-gray-800">
       <div className="container mx-auto px-6">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl font-bold text-brand-azure mb-4">Join Our Discord Community!</h2>

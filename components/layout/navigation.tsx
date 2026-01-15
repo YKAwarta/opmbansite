@@ -1,9 +1,10 @@
 'use client'
 
-import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { useState } from 'react'
+import { ThemeToggle } from '@/components/ui/theme-toggle'
 import { Menu, X } from 'lucide-react'
+import Link from 'next/link'
+import { useState } from 'react'
 
 export function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -43,8 +44,9 @@ export function Navigation() {
             </Link>
           </div>
 
-          {/* Login Button */}
-          <div className="hidden md:block">
+          {/* Login Button + Theme Toggle */}
+          <div className="hidden md:flex items-center space-x-2">
+            <ThemeToggle />
             <Link href="/login">
               <Button className="bg-[#093968] hover:bg-[#093968]/90 text-white">
                 Member Login
@@ -52,13 +54,16 @@ export function Navigation() {
             </Link>
           </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2"
+          {/* Mobile Menu Button + Theme Toggle */}
+          <div className='flex md:hidden items-center space-x-2'>
+            <ThemeToggle />
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className='p-2 text-gray-700 dark:text-gray-300'
           >
             {isMenuOpen ? <X /> : <Menu />}
           </button>
+          </div>
         </div>
 
         {/* Mobile Menu */}

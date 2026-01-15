@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
 import { ChevronDown } from 'lucide-react'
+import { useState } from 'react'
 
 type FaqItem = {
   question: string
@@ -92,7 +92,7 @@ export function FAQSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
 
   return (
-    <section className="py-16 bg-white">
+    <section className="py-16 bg-white dark:bg-gray-900">
       <div className="container mx-auto px-6">
         <div className="max-w-3xl mx-auto">
           <h2 className="text-3xl font-bold text-[#093968] mb-12 text-center">
@@ -103,11 +103,11 @@ export function FAQSection() {
             {faqs.map((faq, index) => (
               <div
                 key={index}
-                className="border border-gray-200 rounded-lg overflow-hidden"
+                className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden"
               >
                 <button
                   onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                  className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition"
+                  className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-800 transition text-gray-900 dark:text-gray-100"
                   aria-expanded={openIndex === index}
                 >
                   <span className="font-medium text-[#093968]">{faq.question}</span>

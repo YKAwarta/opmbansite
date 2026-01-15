@@ -48,7 +48,7 @@ export function CredentialCard({ credential, baseUrl }: { credential: Credential
     <Card className="overflow-hidden">
       <div className="flex flex-col md:flex-row">
         {credential.image_url && (
-          <div className="md:w-48 h-32 md:h-auto bg-gray-100">
+          <div className="md:w-48 h-32 md:h-auto bg-gray-100 dark:bg-gray-800">
             <img 
               src={credential.image_url} 
               alt={credential.name}
@@ -86,7 +86,7 @@ export function CredentialCard({ credential, baseUrl }: { credential: Credential
             </Button>
           </div>
           
-          <div className="mt-3 p-2 bg-gray-50 rounded text-xs">
+          <div className="mt-3 p-2 bg-gray-50 dark:bg-gray-800 rounded text-xs">
             <p className="text-muted-foreground">Verification URL:</p>
             <p className="font-mono break-all">
               {baseUrl}/verify/{credential.verification_code}

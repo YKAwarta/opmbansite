@@ -1,9 +1,9 @@
 import { Card } from '@/components/ui/card'
-import { Mail, MessageSquare, Clock } from 'lucide-react'
+import { Clock, Mail, MessageSquare } from 'lucide-react'
 
 export function ContactSection() {
   return (
-    <section className="py-16 bg-white">
+    <section className="py-16 bg-white dark:bg-gray-900">
       <div className="container mx-auto px-6">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl font-bold text-brand-azure mb-12 text-center">
@@ -49,7 +49,7 @@ export function ContactSection() {
           </div>
 
           {/* General Info */}
-          <Card className="p-8 bg-gray-50">
+          <Card className="p-8 bg-gray-50 dark:bg-gray-800">
             <div className="grid md:grid-cols-3 gap-6 text-center">
               <div>
                 <MessageSquare className="w-8 h-8 text-brand-azure mx-auto mb-3" />

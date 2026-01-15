@@ -1,6 +1,6 @@
 // components/events/events-section.tsx
-import { Calendar, Clock, MapPin, Users } from 'lucide-react'
 import { Card } from '@/components/ui/card'
+import { Calendar, Clock, MapPin, Users } from 'lucide-react'
 
 type EventItem = {
   id: number
@@ -115,7 +115,7 @@ export function EventsSection() {
             {pastEvents.map(event => (
               <Card key={event.id} className="opacity-75">
                 <div className="p-6">
-                  <div className="inline-block px-3 py-1 bg-gray-100 text-gray-600 text-sm font-semibold rounded-full mb-4">
+                  <div className="inline-block px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-sm font-semibold rounded-full mb-4">
                     {event.type}
                   </div>
                   <h3 className="text-xl font-bold text-[#093968]/70 mb-3">{event.title}</h3>

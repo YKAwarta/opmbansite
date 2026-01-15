@@ -1,9 +1,10 @@
-import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
-import Link from 'next/link'
-import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { UserPlus, Award, Users, LogOut } from 'lucide-react'
+import { Card } from '@/components/ui/card'
+import { ThemeToggle } from '@/components/ui/theme-toggle'
+import { createClient } from '@/lib/supabase/server'
+import { Award, LogOut, UserPlus, Users } from 'lucide-react'
+import Link from 'next/link'
+import { redirect } from 'next/navigation'
 
 export default async function AdminDashboard() {
   const supabase = await createClient()
@@ -28,6 +29,7 @@ export default async function AdminDashboard() {
     <div className="container mx-auto p-6">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">Admin Dashboard</h1>
+        <ThemeToggle />
         <form action="/api/auth/logout" method="POST">
           <Button type="submit" variant="outline">
             <LogOut className="w-4 h-4 mr-2" />

@@ -42,7 +42,7 @@ const certifications: Cert[] = [
 
 export function CertificationsSection() {
   return (
-    <section className="py-20 bg-white">
+    <section className="py-20 bg-white dark:bg-gray-900">
       <div className="container mx-auto px-6">
         <div className="text-center mb-12">
           <div className="flex justify-center items-center space-x-3 mb-4">

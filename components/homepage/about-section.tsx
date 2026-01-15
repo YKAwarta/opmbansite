@@ -1,9 +1,9 @@
 import { Card } from '@/components/ui/card'
-import { Target, Eye, Lightbulb } from 'lucide-react'
+import { Eye, Target } from 'lucide-react'
 
 export function AboutSection() {
   return (
-    <section id="about" className="py-20 bg-white">
+    <section id="about" className="py-20 bg-white dark:bg-gray-900">
       <div className="container mx-auto px-6">
         {/* About */}
         <div className="max-w-4xl mx-auto text-center mb-20">

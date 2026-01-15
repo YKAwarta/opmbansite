@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { ThemeToggle } from '@/components/ui/theme-toggle'
 import { createClient } from '@/lib/supabase/server'
 import { CreditCard, GraduationCap, LogOut } from 'lucide-react'
 import Link from 'next/link'
@@ -41,6 +42,7 @@ export default async function DashboardPage() {
     <div className="container mx-auto p-6 max-w-7xl">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">Welcome, {member.full_name}!</h1>
+        <ThemeToggle />
         <form action="/api/auth/logout" method="POST">
           <Button type="submit" variant="outline">
             <LogOut className="w-4 h-4 mr-2" />
