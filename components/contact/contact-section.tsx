@@ -11,24 +11,6 @@ export function ContactSection() {
           </h2>
 
           <div className="grid md:grid-cols-2 gap-8 mb-12">
-            {/* Male President */}
-            <Card className="p-8 border-2 border-brand-blue">
-              <div className="text-center">
-                <h3 className="text-xl font-bold text-brand-blue mb-4">Male President</h3>
-                <div className="space-y-3">
-                  <div className="flex items-center justify-center text-brand-olive/70 dark:text-gray-300">
-                    <Mail className="w-5 h-5 mr-2" />
-                    <a href="mailto:yawartani@alfaisal.edu" className="hover:text-brand-blue">
-                      theopmbanclubmalepresident@gmail.com
-                    </a>
-                  </div>
-                  <p className="text-sm text-brand-olive/60 dark:text-gray-400">
-                    For inquiries about male section activities and membership
-                  </p>
-                </div>
-              </div>
-            </Card>
-
             {/* Female President */}
             <Card className="p-8 border-2 border-brand-pink">
               <div className="text-center">
@@ -42,6 +24,24 @@ export function ContactSection() {
                   </div>
                   <p className="text-sm text-brand-olive/60 dark:text-gray-400">
                     For inquiries about female section activities and membership
+                  </p>
+                </div>
+              </div>
+            </Card>
+
+            {/* Male President */}
+            <Card className="p-8 border-2 border-brand-blue">
+              <div className="text-center">
+                <h3 className="text-xl font-bold text-brand-blue mb-4">Male President</h3>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-center text-brand-olive/70 dark:text-gray-300">
+                    <Mail className="w-5 h-5 mr-2" />
+                    <a href="mailto:yawartani@alfaisal.edu" className="hover:text-brand-blue">
+                      theopmbanclubmalepresident@gmail.com
+                    </a>
+                  </div>
+                  <p className="text-sm text-brand-olive/60 dark:text-gray-400">
+                    For inquiries about male section activities and membership
                   </p>
                 </div>
               </div>
