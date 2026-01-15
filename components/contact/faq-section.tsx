@@ -13,7 +13,7 @@ const faqs: FaqItem[] = [
     question: 'What requirements do I need to meet to become a member?',
     //Do NOT add any apostrophes in this section or you will fuck up the whole goddamn build.
     answer: (
-      <div className="text-[#0d0d0b]/70">
+      <div className="text-[#0d0d0b]/70 dark:text-gray-300">
         <p>To join the club, you must meet the following criteria:</p>
         <ol className="mt-2 ml-6 list-decimal space-y-1">
           <li>You must be a student at Alfaisal University.</li>
@@ -34,7 +34,7 @@ const faqs: FaqItem[] = [
     //Don't add any apostrophes here either. Or you will fuck up the whole goddamn build.
     question: 'How can students earn bonus grades through the club?',
     answer: (
-      <div className="text-[#0d0d0b]/70">
+      <div className="text-[#0d0d0b]/70 dark:text-gray-300">
         <p>
           You can earn bonus grades by meeting the following requirements:
         </p>
@@ -95,7 +95,7 @@ export function FAQSection() {
     <section className="py-16 bg-white dark:bg-gray-900">
       <div className="container mx-auto px-6">
         <div className="max-w-3xl mx-auto">
-          <h2 className="text-3xl font-bold text-[#093968] mb-12 text-center">
+          <h2 className="text-3xl font-bold text-[#093968] dark:text-white mb-12 text-center">
             Frequently Asked Questions
           </h2>
 
@@ -110,7 +110,7 @@ export function FAQSection() {
                   className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-800 transition text-gray-900 dark:text-gray-100"
                   aria-expanded={openIndex === index}
                 >
-                  <span className="font-medium text-[#093968]">{faq.question}</span>
+                  <span className="font-medium text-[#093968] dark:text-white">{faq.question}</span>
                   <ChevronDown
                     className={`w-5 h-5 text-[#0abd62] transition-transform ${
                       openIndex === index ? 'rotate-180' : ''
@@ -121,7 +121,7 @@ export function FAQSection() {
                 {openIndex === index && (
                   <div className="px-6 pb-4">
                     {typeof faq.answer === 'string' ? (
-                      <p className="text-[#0d0d0b]/70">{faq.answer}</p>
+                      <p className="text-[#0d0d0b]/70 dark:text-gray-300">{faq.answer}</p>
                     ) : (
                       faq.answer
                     )}

@@ -5,7 +5,7 @@ export function StudyResources() {
   return (
     <section className="py-16 bg-gray-50 dark:bg-gray-800">
       <div className="container mx-auto px-6">
-        <h2 className="text-3xl font-bold text-[#093968] mb-12 text-center">
+        <h2 className="text-3xl font-bold text-[#093968] dark:text-white mb-12 text-center">
           Study Resources & Support
         </h2>
 
@@ -15,8 +15,8 @@ export function StudyResources() {
             <div className="w-12 h-12 bg-[#093968]/10 rounded-lg flex items-center justify-center mx-auto mb-4">
               <Download className="h-6 w-6 text-[#093968]" />
             </div>
-            <h3 className="font-semibold text-[#093968] mb-2">Study Materials</h3>
-            <p className="text-sm text-[#0d0d0b]/60">
+            <h3 className="font-semibold text-[#093968] dark:text-white mb-2">Study Materials</h3>
+            <p className="text-sm text-[#0d0d0b]/60 dark:text-gray-400">
               Access practice exams, study guides, and reference materials
             </p>
           </Card>
@@ -25,8 +25,8 @@ export function StudyResources() {
             <div className="w-12 h-12 bg-[#f0ba1b]/10 rounded-lg flex items-center justify-center mx-auto mb-4">
               <Users className="h-6 w-6 text-[#f0ba1b]" />
             </div>
-            <h3 className="font-semibold text-[#093968] mb-2">Study Groups</h3>
-            <p className="text-sm text-[#0d0d0b]/60">
+            <h3 className="font-semibold text-[#093968] dark:text-white mb-2">Study Groups</h3>
+            <p className="text-sm text-[#0d0d0b]/60 dark:text-gray-400">
               Join peers preparing for the same certifications
             </p>
           </Card>
@@ -35,8 +35,8 @@ export function StudyResources() {
             <div className="w-12 h-12 bg-[#093968]/10 rounded-lg flex items-center justify-center mx-auto mb-4">
               <Calendar className="h-6 w-6 text-[#093968]" />
             </div>
-            <h3 className="font-semibold text-[#093968] mb-2">Workshop Sessions</h3>
-            <p className="text-sm text-[#0d0d0b]/60">
+            <h3 className="font-semibold text-[#093968] dark:text-white mb-2">Workshop Sessions</h3>
+            <p className="text-sm text-[#0d0d0b]/60 dark:text-gray-400">
               Workshops and testimonies from certified members throughout the year
             </p>
           </Card>

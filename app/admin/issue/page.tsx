@@ -1,18 +1,28 @@
+import { createAdminClient } from '@/lib/supabase/admin'
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { IssueCredentialForm } from '@/components/admin/issue-credential-form'
 
 export default async function AdminIssuePage() {
   const supabase = await createClient()
-  
+
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const { data: isAdmin } = await supabase.rpc('is_admin')
-  if (!isAdmin) redirect('/dashboard')
+  // Use admin client to bypass RLS for database queries
+  const adminClient = createAdminClient()
+
+  // Check if user is admin
+  const { data: member } = await adminClient
+    .from('members')
+    .select('role')
+    .eq('id', user.id)
+    .single()
+
+  if (member?.role !== 'admin') redirect('/dashboard')
 
   // Get all members for the dropdown
-  const { data: members } = await supabase
+  const { data: members } = await adminClient
     .from('members')
     .select('id, full_name, student_id, gender, role, position')
     .eq('is_active', true)

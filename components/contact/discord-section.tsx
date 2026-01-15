@@ -37,8 +37,8 @@ export function DiscordSection() {
     <section className="py-16 bg-gray-50 dark:bg-gray-800">
       <div className="container mx-auto px-6">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl font-bold text-brand-azure mb-4">Join Our Discord Community!</h2>
-          <p className="text-brand-olive/70 mb-12">
+          <h2 className="text-3xl font-bold text-brand-azure dark:text-white mb-4">Join Our Discord Community!</h2>
+          <p className="text-brand-olive/70 dark:text-gray-300 mb-12">
             Connect with fellow members, get real-time support, and stay updated on club activities
           </p>
 
@@ -46,7 +46,7 @@ export function DiscordSection() {
             {/* Male Discord */}
             <Card className="p-8 border-2 border-brand-blue hover:shadow-lg transition">
               <h3 className="text-xl font-bold text-brand-blue mb-4">Male Section Discord</h3>
-              <p className="text-brand-olive/60 mb-6">
+              <p className="text-brand-olive/60 dark:text-gray-400 mb-6">
                 Join discussions, study groups, and educational opportunities
               </p>
               <Button 
@@ -60,7 +60,7 @@ export function DiscordSection() {
             {/* Female Discord */}
             <Card className="p-8 border-2 border-brand-pink hover:shadow-lg transition">
               <h3 className="text-xl font-bold text-brand-pink mb-4">Female Section Discord</h3>
-              <p className="text-brand-olive/60 mb-6">
+              <p className="text-brand-olive/60 dark:text-gray-400 mb-6">
                 Connect with peers, share resources, and collaborate
               </p>
               <Button 
@@ -83,7 +83,7 @@ export function DiscordSection() {
           <div className="flex justify-center p-4">
             {maleQR && <img src={maleQR} alt="Male Discord QR" />}
           </div>
-          <p className="text-center text-sm text-brand-blue/60">
+          <p className="text-center text-sm text-brand-blue/60 dark:text-gray-400">
             Scan this QR code to join the male section Discord server. Once you are verified, you will gain access to all channels.
           </p>
         </DialogContent>
@@ -98,7 +98,7 @@ export function DiscordSection() {
           <div className="flex justify-center p-4">
             {femaleQR && <img src={femaleQR} alt="Female Discord QR" />}
           </div>
-          <p className="text-center text-sm text-brand-pink/60">
+          <p className="text-center text-sm text-brand-pink/60 dark:text-gray-400">
             Scan this QR code to join the female section Discord server. Once you are verified, you will gain access to all channels.
           </p>
         </DialogContent>

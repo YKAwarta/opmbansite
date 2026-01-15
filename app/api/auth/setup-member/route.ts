@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 
 export async function POST() {
+  // Use server client only for authentication check
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
@@ -10,8 +11,13 @@ export async function POST() {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  // Check if member already exists
-  const { data: existingMember } = await supabase
+  // Use admin client for all database operations to bypass RLS
+  // This is necessary because RLS policies may not have proper auth context
+  // in server-side API routes during the login flow
+  const adminClient = createAdminClient()
+
+  // Check if member already exists using admin client
+  const { data: existingMember } = await adminClient
     .from('members')
     .select('id')
     .eq('id', user.id)
@@ -21,9 +27,7 @@ export async function POST() {
     return NextResponse.json({ exists: true, member: existingMember })
   }
 
-  // Create member using admin client
-  const adminClient = createAdminClient()
-  
+  // Create new member
   try {
     const { data, error } = await adminClient
       .from('members')
@@ -40,7 +44,13 @@ export async function POST() {
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {
+      // Handle race condition where member was created between check and insert
+      if (error.code === '23505') {
+        return NextResponse.json({ exists: true, message: 'Member already exists' })
+      }
+      throw error
+    }
 
     return NextResponse.json({ success: true, member: data })
   } catch (error) {

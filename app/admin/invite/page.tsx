@@ -1,14 +1,18 @@
+import { createAdminClient } from '@/lib/supabase/admin'
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { InviteForm } from '@/components/admin/invite-form'
 
 export default async function AdminInvitePage() {
   const supabase = await createClient()
-  
+
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const { data: member } = await supabase
+  // Use admin client to bypass RLS for database queries
+  const adminClient = createAdminClient()
+
+  const { data: member } = await adminClient
     .from('members')
     .select('role')
     .eq('id', user.id)

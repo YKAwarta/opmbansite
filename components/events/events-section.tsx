@@ -68,7 +68,7 @@ export function EventsSection() {
     <div className="container mx-auto px-6 py-16">
       {/* Upcoming Events */}
       <div className="mb-16">
-        <h2 className="text-3xl font-bold text-[#093968] mb-8">Upcoming Events</h2>
+        <h2 className="text-3xl font-bold text-[#093968] dark:text-white mb-8">Upcoming Events</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {upcomingEvents.map(event => (
             <Card key={event.id} className="hover:shadow-lg transition-shadow">
@@ -76,23 +76,23 @@ export function EventsSection() {
                 <div className="inline-block px-3 py-1 bg-[#0abd62]/10 text-[#0abd62] text-sm font-semibold rounded-full mb-4">
                   {event.type}
                 </div>
-                <h3 className="text-xl font-bold text-[#093968] mb-3">{event.title}</h3>
-                <p className="text-[#0d0d0b]/70 mb-4">{event.description}</p>
+                <h3 className="text-xl font-bold text-[#093968] dark:text-white mb-3">{event.title}</h3>
+                <p className="text-[#0d0d0b]/70 dark:text-gray-300 mb-4">{event.description}</p>
 
                 <div className="space-y-2 text-sm">
-                  <div className="flex items-center text-[#0d0d0b]/60">
+                  <div className="flex items-center text-[#0d0d0b]/60 dark:text-gray-400">
                     <Calendar className="w-4 h-4 mr-2" />
                     {formatDate(event.date)}
                   </div>
-                  <div className="flex items-center text-[#0d0d0b]/60">
+                  <div className="flex items-center text-[#0d0d0b]/60 dark:text-gray-400">
                     <Clock className="w-4 h-4 mr-2" />
                     {event.time}
                   </div>
-                  <div className="flex items-center text-[#0d0d0b]/60">
+                  <div className="flex items-center text-[#0d0d0b]/60 dark:text-gray-400">
                     <MapPin className="w-4 h-4 mr-2" />
                     {event.location}
                   </div>
-                  <div className="flex items-center text-[#0d0d0b]/60">
+                  <div className="flex items-center text-[#0d0d0b]/60 dark:text-gray-400">
                     <Users className="w-4 h-4 mr-2" />
                     Capacity: {event.capacity}
                   </div>
@@ -107,9 +107,9 @@ export function EventsSection() {
 
       {/* Past Events */}
       <div>
-        <h2 className="text-3xl font-bold text-[#093968] mb-8">Past Events</h2>
+        <h2 className="text-3xl font-bold text-[#093968] dark:text-white mb-8">Past Events</h2>
         {pastEvents.length === 0 ? (
-          <div className="text-center text-[#0d0d0b]/50 text-lg">N/A</div>
+          <div className="text-center text-[#0d0d0b]/50 dark:text-gray-500 text-lg">N/A</div>
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {pastEvents.map(event => (
@@ -118,14 +118,14 @@ export function EventsSection() {
                   <div className="inline-block px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-sm font-semibold rounded-full mb-4">
                     {event.type}
                   </div>
-                  <h3 className="text-xl font-bold text-[#093968]/70 mb-3">{event.title}</h3>
-                  <p className="text-[#0d0d0b]/60 mb-4">{event.description}</p>
+                  <h3 className="text-xl font-bold text-[#093968]/70 dark:text-gray-300 mb-3">{event.title}</h3>
+                  <p className="text-[#0d0d0b]/60 dark:text-gray-400 mb-4">{event.description}</p>
                   <div className="space-y-2 text-sm">
-                    <div className="flex items-center text-[#0d0d0b]/50">
+                    <div className="flex items-center text-[#0d0d0b]/50 dark:text-gray-500">
                       <Calendar className="w-4 h-4 mr-2" />
                       {formatDate(event.date)}
                     </div>
-                    <div className="flex items-center text-[#0d0d0b]/50">
+                    <div className="flex items-center text-[#0d0d0b]/50 dark:text-gray-500">
                       <Users className="w-4 h-4 mr-2" />
                       {event.capacity}
                     </div>

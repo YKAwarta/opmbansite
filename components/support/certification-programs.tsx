@@ -66,14 +66,14 @@ export function CertificationPrograms() {
   return (
     <section className="py-16 bg-white dark:bg-gray-900">
       <div className="container mx-auto px-6">
-        <h2 className="text-3xl font-bold text-[#093968] mb-12 text-center">
+        <h2 className="text-3xl font-bold text-[#093968] dark:text-white mb-12 text-center">
           Certification Programs We Support
         </h2>
 
         <div className="space-y-12">
           {certifications.map((category) => (
             <div key={category.category}>
-              <h3 className="text-2xl font-semibold text-[#093968] mb-6 flex items-center">
+              <h3 className="text-2xl font-semibold text-[#093968] dark:text-white mb-6 flex items-center">
                 <div className={`w-1 h-8 ${category.barClass} mr-4`}></div>
                 {category.category}
               </h3>
@@ -82,25 +82,25 @@ export function CertificationPrograms() {
                 {category.programs.map((program) => (
                   <Card key={program.name} className={`${category.color} border-2 ${category.bgColor}`}>
                     <div className="p-6">
-                      <h4 className="text-lg font-bold text-[#093968] mb-2">
+                      <h4 className="text-lg font-bold text-[#093968] dark:text-white mb-2">
                         {program.name}
                       </h4>
                       <p className="text-sm text-[#0abd62] font-medium mb-3">
                         {program.provider}
                       </p>
-                      <p className="text-[#0d0d0b]/70 text-sm mb-4">
+                      <p className="text-[#0d0d0b]/70 dark:text-gray-300 text-sm mb-4">
                         {program.description}
                       </p>
-                      
+
                       <div className="space-y-3">
                         <div>
-                          <p className="text-xs font-semibold text-[#093968] mb-1">Prerequisites:</p>
-                          <p className="text-xs text-[#0d0d0b]/60">{program.prerequisites}</p>
+                          <p className="text-xs font-semibold text-[#093968] dark:text-gray-200 mb-1">Prerequisites:</p>
+                          <p className="text-xs text-[#0d0d0b]/60 dark:text-gray-400">{program.prerequisites}</p>
                         </div>
-                        
+
                         <div>
-                          <p className="text-xs font-semibold text-[#093968] mb-1">Club Support:</p>
-                          <p className="text-xs text-[#0d0d0b]/60">{program.support}</p>
+                          <p className="text-xs font-semibold text-[#093968] dark:text-gray-200 mb-1">Club Support:</p>
+                          <p className="text-xs text-[#0d0d0b]/60 dark:text-gray-400">{program.support}</p>
                         </div>
                       </div>
                     </div>

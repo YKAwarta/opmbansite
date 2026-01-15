@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { ThemeToggle } from '@/components/ui/theme-toggle'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { createClient } from '@/lib/supabase/server'
 import { Award, LogOut, UserPlus, Users } from 'lucide-react'
 import Link from 'next/link'
@@ -8,20 +9,29 @@ import { redirect } from 'next/navigation'
 
 export default async function AdminDashboard() {
   const supabase = await createClient()
-  
+
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const { data: isAdmin } = await supabase.rpc('is_admin')
-  if (!isAdmin) redirect('/dashboard')
+  // Use admin client to bypass RLS for database queries
+  const adminClient = createAdminClient()
+
+  // Check if user is admin
+  const { data: member } = await adminClient
+    .from('members')
+    .select('role')
+    .eq('id', user.id)
+    .single()
+
+  if (member?.role !== 'admin') redirect('/dashboard')
 
   // Get stats
-  const { count: memberCount } = await supabase
+  const { count: memberCount } = await adminClient
     .from('members')
     .select('*', { count: 'exact', head: true })
     .eq('is_active', true)
 
-  const { count: credentialCount } = await supabase
+  const { count: credentialCount } = await adminClient
     .from('credentials')
     .select('*', { count: 'exact', head: true })
 

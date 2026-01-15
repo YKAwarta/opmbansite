@@ -46,13 +46,13 @@ export function CertificationsSection() {
       <div className="container mx-auto px-6">
         <div className="text-center mb-12">
           <div className="flex justify-center items-center space-x-3 mb-4">
-            <div className="h-1 w-12 bg-brand-olive" />
-            <h3 className="text-sm font-semibold text-brand-olive uppercase tracking-wider">
+            <div className="h-1 w-12 bg-brand-olive dark:bg-gray-500" />
+            <h3 className="text-sm font-semibold text-brand-olive dark:text-gray-300 uppercase tracking-wider">
               Professional Excellence
             </h3>
-            <div className="h-1 w-12 bg-brand-olive" />
+            <div className="h-1 w-12 bg-brand-olive dark:bg-gray-500" />
           </div>
-          <h2 className="text-4xl font-bold text-brand-azure">Club Faculty Certified In</h2>
+          <h2 className="text-4xl font-bold text-brand-azure dark:text-white">Club Faculty Certified In</h2>
         </div>
 
         <div className="mx-auto grid max-w-6xl grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12 justify-items-center">
@@ -82,7 +82,7 @@ export function CertificationsSection() {
         </div>
 
         <div className="text-center mt-12">
-          <p className="text-lg text-brand-olive/70">
+          <p className="text-lg text-brand-olive/70 dark:text-gray-400">
             Our presidents hold industry-recognized certifications, ensuring you receive guidance from certified professionals.
           </p>
         </div>

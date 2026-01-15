@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ThemeToggle } from '@/components/ui/theme-toggle'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { createClient } from '@/lib/supabase/server'
 import { CreditCard, GraduationCap, LogOut } from 'lucide-react'
 import Link from 'next/link'
@@ -12,19 +13,28 @@ import { redirect } from 'next/navigation'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
-  
+
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const { data: member } = await supabase
+  // Use admin client to bypass RLS for reading member data
+  // The user is already authenticated via getUser() above
+  const adminClient = createAdminClient()
+
+  const { data: member } = await adminClient
     .from('members')
     .select('*')
     .eq('id', user.id)
     .single()
 
-  if (!member) redirect('/login')
+  // If authenticated but no member record, sign out and redirect
+  // This prevents redirect loops between dashboard and login
+  if (!member) {
+    await supabase.auth.signOut()
+    redirect('/login?error=no_member_record')
+  }
 
-  const { data: credentials } = await supabase
+  const { data: credentials } = await adminClient
     .from('credentials')
     .select('*')
     .eq('member_id', user.id)
