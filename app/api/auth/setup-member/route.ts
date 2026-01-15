@@ -1,5 +1,5 @@
-import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 
 export async function POST() {
@@ -45,7 +45,6 @@ export async function POST() {
     return NextResponse.json({ success: true, member: data })
   } catch (error) {
     console.error('Error creating member:', error)
-    // Return success anyway to not block login
-    return NextResponse.json({ success: true, partial: true })
+    return NextResponse.json({ success: false, error: 'Failed to create member', message: error instanceof Error ? error.message : 'Unknown error' }, { status: 500 })
   }
 }

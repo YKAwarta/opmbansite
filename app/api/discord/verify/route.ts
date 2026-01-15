@@ -1,19 +1,26 @@
 import { createAdminClient } from '@/lib/supabase/admin'
+import { discordVerifySchema } from '@/lib/validations/admin'
 import { NextResponse } from 'next/server'
 
 export async function POST(request: Request) {
     try {
-        const { email, discordId, serverGender } = await request.json()
+        let body
+        try{
+            body = await request.json()
+        } catch {
+            return NextResponse.json({ verified: false, message: 'Invalid request body' }, { status: 400 })
+        }
 
+        const validation = discordVerifySchema.safeParse(body)
+        if (!validation.success){
+            return NextResponse.json({verified: false, message: 'Validation failed', details: validation.error.flatten().fieldErrors }, { status: 400 })
+        }
+
+        const { email, serverGender } = validation.data
 
         // Verify secret key to prevent unauthorized access
         const botSecret = request.headers.get('X-Bot-Secret')
         
-        console.log('=== AUTH CHECK ===')
-        console.log('Received secret:', botSecret)
-        console.log('Expected secret:', process.env.DISCORD_BOT_SECRET)
-        console.log('Match:', botSecret === process.env.DISCORD_BOT_SECRET)
-
         if (botSecret !== process.env.DISCORD_BOT_SECRET) {
              return NextResponse.json({ 
                 verified: false,

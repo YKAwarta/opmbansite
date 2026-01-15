@@ -1,5 +1,5 @@
-import { createServerClient, type CookieOptions } from '@supabase/ssr'
-import { cookies } from 'next/headers'
+import { createServerClient, type CookieOptions } from '@supabase/ssr';
+import { cookies } from 'next/headers';
 
 type CookieKV = { name: string; value: string }
 type CookieWrite = { name: string; value: string; options: CookieOptions }
@@ -20,7 +20,10 @@ export async function createClient() {
             cookiesToSet.forEach(({ name, value, options }) => {
               store.set({ name, value, ...options })
             })
-          } catch {
+          } catch (error){
+            if (process.env.NODE_ENV === 'development'){
+              console.warn('Cookie set warning (may be expected):', error instanceof Error ? error.message : 'Unknown error')
+            }
           }
         },
       },

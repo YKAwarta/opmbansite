@@ -1,9 +1,10 @@
-import { createClient } from '@/lib/supabase/server'
+import { issueCredentialForMember } from '@/lib/credentials/service'
+import { getWelcomeEmail } from '@/lib/email/templates'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { createClient } from '@/lib/supabase/server'
+import { inviteMemberSchema } from '@/lib/validations/admin'
 import { NextResponse } from 'next/server'
 import { Resend } from 'resend'
-import { getWelcomeEmail } from '@/lib/email/templates'
-import { issueCredentialForMember } from '@/lib/credentials/service'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
@@ -25,8 +26,22 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 
-  const body = await request.json()
-  const { email, password, full_name, student_id, gender, role, position } = body
+  let body
+  try{
+    body = await request.json()
+  } catch {
+    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 })
+  }
+  
+  const validation = inviteMemberSchema.safeParse(body)
+  if (!validation.success){
+    return NextResponse.json({ 
+      error: 'Validation failed', 
+      details: validation.error.flatten().fieldErrors 
+    }, { status: 400 })
+  }
+
+  const { email, password, full_name, student_id, gender, role, position } = validation.data
 
   const adminClient = createAdminClient()
 
@@ -76,47 +91,38 @@ export async function POST(request: Request) {
 
     // Issue Badge
     try {
-      console.log('Issuing badge for new member:', authData.user.id)
       const badgeResult = await issueCredentialForMember({
         memberId: authData.user.id,
         kind: 'badge',
         name: `Badge (${full_name}) - ${currentYear}`
       })
       credentialResults.badge = badgeResult
-      console.log('✅ Badge issued successfully')
     } catch (badgeError) {
-      console.error('❌ Failed to issue badge:', badgeError)
       credentialResults.errors.push('badge')
     }
 
     // Issue Membership Certificate
     try {
-      console.log('Issuing membership certificate for new member:', authData.user.id)
       const certResult = await issueCredentialForMember({
         memberId: authData.user.id,
         kind: 'certificate',
         name: `Membership Certificate (${full_name}) - ${currentYear}`
       })
       credentialResults.certificate = certResult
-      console.log('✅ Membership Certificate issued successfully')
     } catch (certError) {
-      console.error('❌ Failed to issue certificate:', certError)
       credentialResults.errors.push('certificate')
     }
 
     // Issue Membership Card (with graceful handling for missing templates)
     try {
-      console.log('Issuing membership card for new member:', authData.user.id)
       const cardResult = await issueCredentialForMember({
         memberId: authData.user.id,
         kind: 'membership_card',
         name: `Membership Card (${full_name}) - ${currentYear}`
       })
       credentialResults.membership_card = cardResult
-      console.log('✅ Membership Card issued successfully')
     } catch (cardError) {
       // Gracefully handle missing membership card templates
-      console.warn('⚠️  Membership card template not found (expected if bucket is empty):', cardError)
       credentialResults.errors.push('membership_card')
     }
 

@@ -3,6 +3,7 @@
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
+import { toast } from '@/hooks/use-toast'
 import { Download, ExternalLink } from 'lucide-react'
 import Link from 'next/link'
 
@@ -34,7 +35,11 @@ export function CredentialCard({ credential, baseUrl }: { credential: Credential
       window.URL.revokeObjectURL(url)
     } catch (error) {
       console.error('Download failed:', error)
-      // Fallback: just open in new tab if download fails
+      toast({
+        title: 'Download Failed',
+        description: 'Opening credential in new tab instead for manual download.',
+      })
+      // Fallback: open in new tab if download fails
       window.open(credential.image_url, '_blank')
     }
   }

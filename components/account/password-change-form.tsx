@@ -1,21 +1,20 @@
 'use client'
 
-import { useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { toast } from '@/hooks/use-toast'
+import { createClient } from '@/lib/supabase/client'
 import { Eye, EyeOff } from 'lucide-react'
+import { useState } from 'react'
 
+const supabase = createClient()
 export function PasswordChangeForm() {
-  const [currentPassword, setCurrentPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [showPasswords, setShowPasswords] = useState(false)
-  const supabase = createClient()
 
   const handlePasswordChange = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -56,7 +55,6 @@ export function PasswordChangeForm() {
         description: 'Password updated successfully',
       })
       // Clear form
-      setCurrentPassword('')
       setNewPassword('')
       setConfirmPassword('')
     }

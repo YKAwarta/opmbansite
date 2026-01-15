@@ -1,11 +1,12 @@
 'use client'
 
-import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { toast } from '@/hooks/use-toast'
+import { useState } from 'react'
 
 interface Member {
   id: string
@@ -111,12 +112,10 @@ export function IssueCredentialForm({ members }: { members: Member[] }) {
           </Select>
         </div>
 
-        <div>
+        <div className ="space-y-2">
           <Label htmlFor="name">Credential Name (Optional)</Label>
-          <input
-            type="text"
+          <Input
             id="name"
-            className="w-full px-3 py-2 border rounded-md"
             value={credentialName}
             onChange={(e) => setCredentialName(e.target.value)}
             placeholder="e.g., '2025 Membership Certificate'"

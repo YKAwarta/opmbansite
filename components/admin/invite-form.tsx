@@ -1,13 +1,13 @@
 'use client'
 
-import { useState } from 'react'
 import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { toast } from '@/hooks/use-toast'
-import { Loader2, RefreshCw, Copy } from 'lucide-react'
+import { Copy, Loader2, RefreshCw } from 'lucide-react'
+import { useState } from 'react'
 
 export function InviteForm() {
   const [loading, setLoading] = useState(false)
@@ -23,10 +23,9 @@ export function InviteForm() {
 
   const generatePassword = () => {
     const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#$'
-    let password = ''
-    for (let i = 0; i < 12; i++) {
-      password += chars.charAt(Math.floor(Math.random() * chars.length))
-    }
+    const array = new Uint32Array(12)
+    crypto.getRandomValues(array)
+    const password = Array.from(array, (num) => chars[num % chars.length]).join('') 
     setFormData({...formData, password})
   }
 

@@ -1,5 +1,6 @@
-import { createClient } from '@/lib/supabase/server'
 import { issueCredentialForMember } from '@/lib/credentials/service'
+import { createClient } from '@/lib/supabase/server'
+import { issueCredentialSchema } from '@/lib/validations/admin'
 import { NextResponse } from 'next/server'
 
 export const runtime = 'nodejs'
@@ -23,13 +24,36 @@ export async function POST(request: Request) {
   }
   
   try {
-    const body = await request.json()
+    let body
+    try{
+      body = await request.json()
+    } catch {
+      return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 })
+    }
+
+    const validation = issueCredentialSchema.safeParse(body)
+    if (!validation.success){
+      return NextResponse.json({error: 'Validation failed', details: validation.error.flatten().fieldErrors }, { status: 400 })
+    }
+
+    const allowedKinds = new Set(['badge', 'certificate', 'membership_card'] as const)
+    if (!allowedKinds.has(body.kind)) {
+      return NextResponse.json({ error: 'Invalid kind' }, { status: 400 })
+    }
+
+    if (typeof body.memberId !== 'string' || body.memberId.length < 10) {
+      return NextResponse.json({ error: 'Invalid memberId' }, { status: 400 })
+    }
+
+    if (typeof body.name !== 'string' || body.name.trim().length === 0) {
+      return NextResponse.json({ error: 'Invalid name' }, { status: 400 })
+    }
     
     const result = await issueCredentialForMember({
-      memberId: body.memberId,
-      kind: body.kind,
-      name: body.name,
-      expiryDate: body.expiryDate
+      memberId: validation.data.memberId,
+      kind: validation.data.kind,
+      name: validation.data.name,
+      expiryDate: validation.data.expiryDate ?? undefined
     })
     
     // Result is an array from RPC, get first item

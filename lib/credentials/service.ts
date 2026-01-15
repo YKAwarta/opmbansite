@@ -9,7 +9,7 @@ export async function issueCredentialForMember(params: {
 }) {
   const adminClient = createAdminClient()
   
-  console.log('Issuing credential:', params)
+
   
   // Get member data
   const { data: member, error: memberError } = await adminClient
@@ -23,7 +23,7 @@ export async function issueCredentialForMember(params: {
     throw new Error('Member not found')
   }
 
-  console.log('Member found:', member.full_name, member.position, member.gender)
+
 
   // Map position names to file prefixes
   const positionMap: Record<string, string> = {
@@ -52,7 +52,7 @@ export async function issueCredentialForMember(params: {
     }
     
     imageUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/generated-credentials/badges/${badgeFile}`
-    console.log('Badge URL:', imageUrl)
+
   } 
   // Certificates and Cards - generate with text
   else {
@@ -68,8 +68,10 @@ export async function issueCredentialForMember(params: {
         fileName = `certificate-${positionKey}-${member.gender}.png`
       } else {
         // membership_card
-        if (positionKey === 'president' || positionKey === 'member') {
+        if (positionKey === 'president') {
           fileName = `card-president-${member.gender}.png`
+        } else if (positionKey === 'member') { 
+          fileName = 'card-member.png'
         } else {
           // Officers don't have gendered card variants
           fileName = `card-${positionKey}.png`
@@ -78,8 +80,7 @@ export async function issueCredentialForMember(params: {
       
       const folderName = params.kind === 'membership_card' ? 'cards' : 'certificates'
       const templateUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/credential-templates/${folderName}/${fileName}`
-      
-      console.log('Template URL:', templateUrl)
+
       
       // Test if template exists
       const testFetch = await fetch(templateUrl)
