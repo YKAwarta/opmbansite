@@ -52,13 +52,15 @@ export default async function DashboardPage() {
     <div className="container mx-auto p-6 max-w-7xl">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">Welcome, {member.full_name}!</h1>
-        <ThemeToggle />
-        <form action="/api/auth/logout" method="POST">
-          <Button type="submit" variant="outline">
-            <LogOut className="w-4 h-4 mr-2" />
-            Logout
-          </Button>
-        </form>
+        <div className="flex items-center space-x-2">
+          <ThemeToggle />
+          <form action="/api/auth/logout" method="POST">
+            <Button type="submit" variant="outline">
+              <LogOut className="w-4 h-4 mr-2" />
+              Logout
+            </Button>
+          </form>
+        </div>
       </div>
       
       <div className="grid gap-6 lg:grid-cols-3">

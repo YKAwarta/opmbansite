@@ -51,12 +51,12 @@ function OfficerCard({
           <User className="w-10 h-10" style={{ color }} />
         </div>
 
-        <h3 className="text-lg font-bold text-brand-azure mb-1">{officer.name}</h3>
+        <h3 className="text-lg font-bold text-brand-azure dark:text-white mb-1">{officer.name}</h3>
         <p className="text-brand-green font-medium mb-3">{officer.position}</p>
 
         {officer.showEmail && officer.email && (
-          <p className="text-sm text-brand-olive/60 break-all">
-            <a href={`mailto:${officer.email}`} className="hover:text-brand-azure transition">
+          <p className="text-sm text-brand-olive/60 dark:text-gray-400 break-all">
+            <a href={`mailto:${officer.email}`} className="hover:text-brand-azure dark:hover:text-[#0abd62] transition">
               {officer.email}
             </a>
           </p>
@@ -72,21 +72,21 @@ export function TeamSection() {
 
   return (
     <div className="container mx-auto px-6 py-16 text-gray-900 dark:text-gray-100">
-      <h2 className="text-3xl font-bold text-brand-azure mb-8 text-center">Club Officers</h2>
+      <h2 className="text-3xl font-bold text-brand-azure dark:text-white mb-8 text-center">Club Officers</h2>
 
-      <Tabs defaultValue="male" className="w-full">
+      <Tabs defaultValue="female" className="w-full">
         <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 mb-8">
-          <TabsTrigger
-            value="male"
-            className="data-[state=active]:bg-brand-blue data-[state=active]:text-white"
-          >
-            Male Staff
-          </TabsTrigger>
           <TabsTrigger
             value="female"
             className="data-[state=active]:bg-brand-pink data-[state=active]:text-white"
           >
             Female Staff
+          </TabsTrigger>
+          <TabsTrigger
+            value="male"
+            className="data-[state=active]:bg-brand-blue data-[state=active]:text-white"
+          >
+            Male Staff
           </TabsTrigger>
         </TabsList>
 

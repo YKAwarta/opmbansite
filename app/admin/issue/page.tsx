@@ -1,7 +1,10 @@
+import { IssueCredentialForm } from '@/components/admin/issue-credential-form'
+import { Button } from '@/components/ui/button'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { createClient } from '@/lib/supabase/server'
+import { ArrowLeft } from 'lucide-react'
+import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { IssueCredentialForm } from '@/components/admin/issue-credential-form'
 
 export default async function AdminIssuePage() {
   const supabase = await createClient()
@@ -30,7 +33,14 @@ export default async function AdminIssuePage() {
 
   return (
     <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">Issue Credential</h1>
+      <div className="flex items-center space-x-4 mb-6">
+        <Link href="/admin">
+          <Button variant="outline" size="icon">
+            <ArrowLeft className="w-4 h-4" />
+          </Button>
+        </Link>
+        <h1 className="text-3xl font-bold">Issue Credential</h1>
+      </div>
       <IssueCredentialForm members={members || []} />
     </div>
   )

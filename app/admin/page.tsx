@@ -3,7 +3,7 @@ import { Card } from '@/components/ui/card'
 import { ThemeToggle } from '@/components/ui/theme-toggle'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { createClient } from '@/lib/supabase/server'
-import { Award, LogOut, UserPlus, Users } from 'lucide-react'
+import { ArrowLeft, Award, LogOut, UserPlus, Users } from 'lucide-react'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 
@@ -38,33 +38,42 @@ export default async function AdminDashboard() {
   return (
     <div className="container mx-auto p-6">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">Admin Dashboard</h1>
-        <ThemeToggle />
-        <form action="/api/auth/logout" method="POST">
-          <Button type="submit" variant="outline">
-            <LogOut className="w-4 h-4 mr-2" />
-            Logout
-          </Button>
-        </form>
+        <div className="flex items-center space-x-4">
+          <Link href="/dashboard">
+            <Button variant="outline" size="icon">
+              <ArrowLeft className="w-4 h-4" />
+            </Button>
+          </Link>
+          <h1 className="text-3xl font-bold">Admin Dashboard</h1>
+        </div>
+        <div className="flex items-center space-x-2">
+          <ThemeToggle />
+          <form action="/api/auth/logout" method="POST">
+            <Button type="submit" variant="outline">
+              <LogOut className="w-4 h-4 mr-2" />
+              Logout
+            </Button>
+          </form>
+        </div>
       </div>
 
       {/* Stats */}
-      <div className="grid md:grid-cols-3 gap-6 mb-8">
-        <Card className="p-6">
+      <div className="flex justify-center gap-6 mb-8">
+        <Card className="p-6 w-full max-w-xs">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-2xl font-bold">{memberCount || 0}</p>
-              <p className="text-gray-600">Active Members</p>
+              <p className="text-gray-600 dark:text-gray-400">Active Members</p>
             </div>
             <Users className="w-8 h-8 text-[#093968]" />
           </div>
         </Card>
-        
-        <Card className="p-6">
+
+        <Card className="p-6 w-full max-w-xs">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-2xl font-bold">{credentialCount || 0}</p>
-              <p className="text-gray-600">Credentials Issued</p>
+              <p className="text-gray-600 dark:text-gray-400">Credentials Issued</p>
             </div>
             <Award className="w-8 h-8 text-[#0abd62]" />
           </div>
