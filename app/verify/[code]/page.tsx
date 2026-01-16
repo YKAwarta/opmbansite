@@ -1,6 +1,6 @@
-import { createClient } from '@/lib/supabase/server'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { createClient } from '@/lib/supabase/server'
 import { CheckCircle, XCircle } from 'lucide-react'
 
 interface PageProps {
@@ -43,7 +43,7 @@ export default async function VerifyPage({ params }: PageProps) {
             <CardTitle>Verified Credential</CardTitle>
           </div>
           <CardDescription>
-            This credential has been verified by the OPM/BAN Club
+            This credential has been verified by The OPM & BAN Club
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
