@@ -1,6 +1,18 @@
 import { z } from 'zod'
 
 /**
+ * Saudi mobile phone number regex: must start with 05 and be exactly 10 digits
+ */
+export const SAUDI_MOBILE_REGEX = /^05\d{8}$/
+
+/**
+ * Validates a Saudi mobile phone number format
+ */
+export function isValidSaudiMobile(phone: string): boolean {
+  return SAUDI_MOBILE_REGEX.test(phone)
+}
+
+/**
  * Validation schema for inviting new members
  */
 export const inviteMemberSchema = z.object({
@@ -17,6 +29,8 @@ export const inviteMemberSchema = z.object({
     .max(100, 'Name must be less than 100 characters'),
   student_id: z.string()
     .min(1, 'Student ID is required'),
+  phone_number: z.string()
+    .regex(SAUDI_MOBILE_REGEX, 'Phone number must be a valid Saudi mobile (05XXXXXXXX)'),
   gender: z.enum(['male', 'female'], {
     message: 'Gender must be male or female'
   }),

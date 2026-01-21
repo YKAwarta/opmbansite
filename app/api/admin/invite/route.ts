@@ -16,7 +16,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const { data: adminCheck } = await supabase
+  const adminClient = createAdminClient()
+
+  // Use adminClient to bypass RLS for role check (consistent with admin page)
+  const { data: adminCheck } = await adminClient
     .from('members')
     .select('role')
     .eq('id', user.id)
@@ -41,9 +44,7 @@ export async function POST(request: Request) {
     }, { status: 400 })
   }
 
-  const { email, password, full_name, student_id, gender, role, position } = validation.data
-
-  const adminClient = createAdminClient()
+  const { email, password, full_name, student_id, phone_number, gender, role, position } = validation.data
 
   try {
     // Step 1: Create auth user
@@ -64,6 +65,7 @@ export async function POST(request: Request) {
         email,
         full_name,
         student_id,
+        phone_number,
         role: role || 'member',
         position: (role === 'officer' || role === 'admin') ? position : null,
         gender,

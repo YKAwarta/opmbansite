@@ -6,20 +6,51 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { toast } from '@/hooks/use-toast'
+import { isValidSaudiMobile } from '@/lib/validations/admin'
 import { Copy, Loader2, RefreshCw } from 'lucide-react'
 import { useState } from 'react'
 
 export function InviteForm() {
   const [loading, setLoading] = useState(false)
+  const [phoneError, setPhoneError] = useState('')
   const [formData, setFormData] = useState({
     email: '',
     password: '',
     full_name: '',
     student_id: '',
+    phone_number: '',
     gender: '',
     role: 'member',
     position: ''
   })
+
+  // Strips non-digit characters and limits to 10 digits
+  const normalizePhoneInput = (value: string): string => {
+    return value.replace(/\D/g, '').slice(0, 10)
+  }
+
+  const handlePhoneChange = (value: string) => {
+    const normalized = normalizePhoneInput(value)
+    setFormData({ ...formData, phone_number: normalized })
+
+    // Clear error while typing, validate on blur or submit
+    if (phoneError && normalized.length === 0) {
+      setPhoneError('')
+    }
+  }
+
+  const validatePhone = (): boolean => {
+    if (!formData.phone_number) {
+      setPhoneError('Phone number is required')
+      return false
+    }
+    if (!isValidSaudiMobile(formData.phone_number)) {
+      setPhoneError('Phone number must be a valid Saudi mobile (05XXXXXXXX)')
+      return false
+    }
+    setPhoneError('')
+    return true
+  }
 
   const generatePassword = () => {
     const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#$'
@@ -40,11 +71,20 @@ export function InviteForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (!formData.password) {
       toast({
         title: 'Error',
         description: 'Please generate or enter a password',
+        variant: 'destructive'
+      })
+      return
+    }
+
+    if (!validatePhone()) {
+      toast({
+        title: 'Error',
+        description: 'Please enter a valid phone number',
         variant: 'destructive'
       })
       return
@@ -71,10 +111,12 @@ export function InviteForm() {
         password: '',
         full_name: '',
         student_id: '',
+        phone_number: '',
         gender: '',
         role: formData.role,
         position: ''
       })
+      setPhoneError('')
     } else {
       const error = await response.json()
       toast({
@@ -160,6 +202,25 @@ export function InviteForm() {
                 onChange={(e) => setFormData({...formData, student_id: e.target.value})}
                 required
               />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="phone_number">Phone Number *</Label>
+              <Input
+                id="phone_number"
+                type="tel"
+                inputMode="numeric"
+                placeholder="05XXXXXXXX"
+                maxLength={10}
+                value={formData.phone_number}
+                onChange={(e) => handlePhoneChange(e.target.value)}
+                onBlur={validatePhone}
+                required
+                className={phoneError ? 'border-red-500' : ''}
+              />
+              {phoneError && (
+                <p className="text-sm text-red-500">{phoneError}</p>
+              )}
             </div>
 
             <div className="space-y-2">
