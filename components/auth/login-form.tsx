@@ -34,7 +34,7 @@ export function LoginForm() {
         setError('Invalid email or password. Please try again.')
         toast({
           title: 'Login Failed',
-          description: signInError.message,
+          description: 'Invalid email or password.',
           variant: 'destructive',
         })
         return

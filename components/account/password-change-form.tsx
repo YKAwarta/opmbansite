@@ -11,6 +11,7 @@ import { useState } from 'react'
 
 const supabase = createClient()
 export function PasswordChangeForm() {
+  const [currentPassword, setCurrentPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [loading, setLoading] = useState(false)
@@ -18,7 +19,7 @@ export function PasswordChangeForm() {
 
   const handlePasswordChange = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (newPassword !== confirmPassword) {
       toast({
         title: 'Error',
@@ -39,6 +40,33 @@ export function PasswordChangeForm() {
 
     setLoading(true)
 
+    // Re-authenticate with current password before allowing the change
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user?.email) {
+      toast({
+        title: 'Error',
+        description: 'Unable to verify your identity. Please log in again.',
+        variant: 'destructive'
+      })
+      setLoading(false)
+      return
+    }
+
+    const { error: reAuthError } = await supabase.auth.signInWithPassword({
+      email: user.email,
+      password: currentPassword,
+    })
+
+    if (reAuthError) {
+      toast({
+        title: 'Error',
+        description: 'Current password is incorrect.',
+        variant: 'destructive'
+      })
+      setLoading(false)
+      return
+    }
+
     const { error } = await supabase.auth.updateUser({
       password: newPassword
     })
@@ -46,7 +74,7 @@ export function PasswordChangeForm() {
     if (error) {
       toast({
         title: 'Error',
-        description: error.message,
+        description: 'Failed to update password. Please try again.',
         variant: 'destructive'
       })
     } else {
@@ -55,10 +83,11 @@ export function PasswordChangeForm() {
         description: 'Password updated successfully',
       })
       // Clear form
+      setCurrentPassword('')
       setNewPassword('')
       setConfirmPassword('')
     }
-    
+
     setLoading(false)
   }
 
@@ -70,6 +99,19 @@ export function PasswordChangeForm() {
       </CardHeader>
       <CardContent>
         <form onSubmit={handlePasswordChange} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="current-password">Current Password</Label>
+            <div className="relative">
+              <Input
+                id="current-password"
+                type={showPasswords ? "text" : "password"}
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                required
+              />
+            </div>
+          </div>
+
           <div className="space-y-2">
             <Label htmlFor="new-password">New Password</Label>
             <div className="relative">
@@ -83,7 +125,7 @@ export function PasswordChangeForm() {
               />
             </div>
           </div>
-          
+
           <div className="space-y-2">
             <Label htmlFor="confirm-password">Confirm New Password</Label>
             <div className="relative">

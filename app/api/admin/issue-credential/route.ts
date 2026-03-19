@@ -66,8 +66,8 @@ export async function POST(request: Request) {
     })
   } catch (error) {
     console.error('Error issuing credential:', error)
-    return NextResponse.json({ 
-      error: error instanceof Error ? error.message : 'Failed to issue credential' 
+    return NextResponse.json({
+      error: 'Failed to issue credential'
     }, { status: 500 })
   }
 }

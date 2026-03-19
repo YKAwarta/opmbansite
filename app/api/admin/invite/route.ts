@@ -1,14 +1,20 @@
 import { issueCredentialForMember } from '@/lib/credentials/service'
 import { getWelcomeEmail } from '@/lib/email/templates'
+import { rateLimit } from '@/lib/rate-limit'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { createClient } from '@/lib/supabase/server'
 import { inviteMemberSchema } from '@/lib/validations/admin'
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  // Rate limit: 20 invites per minute per IP
+  const ip = request.headers.get('x-forwarded-for')?.split(',')[0].trim() ?? 'unknown'
+  if (!rateLimit(`invite:${ip}`, 20, 60_000)) {
+    return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
+  }
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
@@ -162,9 +168,9 @@ export async function POST(request: Request) {
       }
     })
   } catch (error) {
-    console.error('Error:', error)
+    console.error('Error creating member:', error)
     return NextResponse.json({
-      error: error instanceof Error ? error.message : 'Failed'
+      error: 'Failed to create member account'
     }, { status: 400 })
   }
 }
