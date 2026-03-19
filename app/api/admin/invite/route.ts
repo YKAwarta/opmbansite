@@ -41,33 +41,42 @@ export async function POST(request: NextRequest) {
   } catch {
     return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 })
   }
-  
+
   const validation = inviteMemberSchema.safeParse(body)
   if (!validation.success){
-    return NextResponse.json({ 
-      error: 'Validation failed', 
-      details: validation.error.flatten().fieldErrors 
+    return NextResponse.json({
+      error: 'Validation failed',
+      details: validation.error.flatten().fieldErrors
     }, { status: 400 })
   }
 
-  const { email, password, full_name, student_id, phone_number, gender, role, position } = validation.data
+  const { email, full_name, student_id, phone_number, gender, role, position } = validation.data
 
   try {
-    // Step 1: Create auth user
-    const { data: authData, error: authError } = await adminClient.auth.admin.createUser({
+    // Step 1: Generate invite link (creates auth user with no password)
+    const { data: linkData, error: linkError } = await adminClient.auth.admin.generateLink({
+      type: 'invite',
       email,
-      password,
-      email_confirm: true,
-      user_metadata: { full_name, student_id, gender }
+      options: {
+        data: { full_name, student_id, gender },
+        redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback`
+      }
     })
 
-    if (authError) throw authError
+    if (linkError) throw linkError
+
+    const inviteLink = linkData.properties?.action_link
+    const userId = linkData.user?.id
+
+    if (!inviteLink || !userId) {
+      throw new Error('Failed to generate invite link: missing action_link or user id')
+    }
 
     // Step 2: Create member record
     const { error: memberError } = await adminClient
       .from('members')
       .insert({
-        id: authData.user.id,
+        id: userId,
         email,
         full_name,
         student_id,
@@ -79,7 +88,7 @@ export async function POST(request: NextRequest) {
       })
 
     if (memberError) {
-      await adminClient.auth.admin.deleteUser(authData.user.id)
+      await adminClient.auth.admin.deleteUser(userId)
       throw memberError
     }
 
@@ -100,7 +109,7 @@ export async function POST(request: NextRequest) {
     // Issue Badge
     try {
       const badgeResult = await issueCredentialForMember({
-        memberId: authData.user.id,
+        memberId: userId,
         kind: 'badge',
         name: `Badge (${full_name}) - ${currentYear}`
       })
@@ -112,7 +121,7 @@ export async function POST(request: NextRequest) {
     // Issue Membership Certificate
     try {
       const certResult = await issueCredentialForMember({
-        memberId: authData.user.id,
+        memberId: userId,
         kind: 'certificate',
         name: `Membership Certificate (${full_name}) - ${currentYear}`
       })
@@ -124,7 +133,7 @@ export async function POST(request: NextRequest) {
     // Issue Membership Card (with graceful handling for missing templates)
     try {
       const cardResult = await issueCredentialForMember({
-        memberId: authData.user.id,
+        memberId: userId,
         kind: 'membership_card',
         name: `Membership Card (${full_name}) - ${currentYear}`
       })
@@ -134,20 +143,19 @@ export async function POST(request: NextRequest) {
       credentialResults.errors.push('membership_card')
     }
 
-    // Step 4: Send welcome email
+    // Step 4: Send welcome email with invite link
     if (process.env.RESEND_API_KEY) {
       const emailHtml = getWelcomeEmail({
         useEmbeddedLogo: false,
         fullName: full_name,
         email: email,
-        password: password,
-        loginUrl: `${process.env.NEXT_PUBLIC_APP_URL}/login`
+        inviteLink
       })
 
       await resend.emails.send({
         from: 'The OPM&BAN Club <noreply@theopmbanclub.com>',
         to: email,
-        subject: '🎉 Welcome to The OPM&BAN Club - Your Account is Ready!',
+        subject: '🎉 Welcome to The OPM&BAN Club - Set Up Your Account!',
         html: emailHtml
       })
     }

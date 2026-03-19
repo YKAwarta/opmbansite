@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { toast } from '@/hooks/use-toast'
 import { isValidSaudiMobile } from '@/lib/validations/admin'
-import { Copy, Loader2, RefreshCw } from 'lucide-react'
+import { Loader2 } from 'lucide-react'
 import { useState } from 'react'
 
 export function InviteForm() {
@@ -15,7 +15,6 @@ export function InviteForm() {
   const [phoneError, setPhoneError] = useState('')
   const [formData, setFormData] = useState({
     email: '',
-    password: '',
     full_name: '',
     student_id: '',
     phone_number: '',
@@ -52,34 +51,8 @@ export function InviteForm() {
     return true
   }
 
-  const generatePassword = () => {
-    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#$'
-    const array = new Uint32Array(12)
-    crypto.getRandomValues(array)
-    const password = Array.from(array, (num) => chars[num % chars.length]).join('') 
-    setFormData({...formData, password})
-  }
-
-  const copyCredentials = () => {
-    const text = `Email: ${formData.email}\nPassword: ${formData.password}`
-    navigator.clipboard.writeText(text)
-    toast({
-      title: 'Copied!',
-      description: 'Credentials copied to clipboard',
-    })
-  }
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-
-    if (!formData.password) {
-      toast({
-        title: 'Error',
-        description: 'Please generate or enter a password',
-        variant: 'destructive'
-      })
-      return
-    }
 
     if (!validatePhone()) {
       toast({
@@ -100,15 +73,14 @@ export function InviteForm() {
 
     if (response.ok) {
       toast({
-        title: 'Account Created!',
-        description: `Login: ${formData.email} | Password: ${formData.password}`,
-        duration: 10000
+        title: 'Invite Sent!',
+        description: `An invite link has been sent to ${formData.email}`,
+        duration: 8000
       })
-      
+
       // Reset form but keep role
       setFormData({
         email: '',
-        password: '',
         full_name: '',
         student_id: '',
         phone_number: '',
@@ -125,16 +97,16 @@ export function InviteForm() {
         variant: 'destructive'
       })
     }
-    
+
     setLoading(false)
   }
 
   return (
     <Card className="max-w-2xl">
       <CardHeader>
-        <CardTitle>Create Member Account</CardTitle>
+        <CardTitle>Invite New Member</CardTitle>
         <CardDescription>
-          The member will receive their login credentials via email
+          The member will receive an invite link by email to set up their own password
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -150,38 +122,6 @@ export function InviteForm() {
                 onChange={(e) => setFormData({...formData, email: e.target.value})}
                 required
               />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="password">Initial Password *</Label>
-              <div className="flex gap-2">
-                <Input
-                  id="password"
-                  type="text"
-                  placeholder="Click generate"
-                  value={formData.password}
-                  onChange={(e) => setFormData({...formData, password: e.target.value})}
-                  required
-                />
-                <Button 
-                  type="button" 
-                  variant="outline" 
-                  size="icon"
-                  onClick={generatePassword}
-                >
-                  <RefreshCw className="h-4 w-4" />
-                </Button>
-                {formData.password && (
-                  <Button 
-                    type="button" 
-                    variant="outline" 
-                    size="icon"
-                    onClick={copyCredentials}
-                  >
-                    <Copy className="h-4 w-4" />
-                  </Button>
-                )}
-              </div>
             </div>
 
             <div className="space-y-2">
@@ -225,8 +165,8 @@ export function InviteForm() {
 
             <div className="space-y-2">
               <Label htmlFor="gender">Gender *</Label>
-              <Select 
-                value={formData.gender} 
+              <Select
+                value={formData.gender}
                 onValueChange={(value) => setFormData({...formData, gender: value})}
               >
                 <SelectTrigger>
@@ -241,8 +181,8 @@ export function InviteForm() {
 
             <div className="space-y-2">
               <Label htmlFor="role">Role *</Label>
-              <Select 
-                value={formData.role} 
+              <Select
+                value={formData.role}
                 onValueChange={(value) => setFormData({...formData, role: value, position: ''})}
               >
                 <SelectTrigger>
@@ -259,8 +199,8 @@ export function InviteForm() {
             {(formData.role === 'officer' || formData.role === 'admin') && (
               <div className="space-y-2 col-span-2">
                 <Label htmlFor="position">Position *</Label>
-                <Select 
-                  value={formData.position} 
+                <Select
+                  value={formData.position}
                   onValueChange={(value) => setFormData({...formData, position: value})}
                 >
                   <SelectTrigger>
@@ -278,18 +218,18 @@ export function InviteForm() {
             )}
           </div>
 
-          <Button 
-            type="submit" 
+          <Button
+            type="submit"
             disabled={loading || !formData.gender}
             className="w-full"
           >
             {loading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Creating Account...
+                Sending Invite...
               </>
             ) : (
-              'Create Account & Send Credentials'
+              'Create Account & Send Invite'
             )}
           </Button>
         </form>
