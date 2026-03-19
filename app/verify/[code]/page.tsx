@@ -1,7 +1,10 @@
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { rateLimit } from '@/lib/rate-limit'
 import { createClient } from '@/lib/supabase/server'
 import { CheckCircle, XCircle } from 'lucide-react'
+import { headers } from 'next/headers'
+import { NextResponse } from 'next/server'
 
 interface PageProps {
   params: Promise<{ code: string }>  // Make params a Promise
@@ -9,6 +12,28 @@ interface PageProps {
 
 export default async function VerifyPage({ params }: PageProps) {
   const { code } = await params  // Await the params
+
+  // Rate limit: 20 requests per minute per IP
+  const headersList = await headers()
+  const ip = headersList.get('x-forwarded-for')?.split(',')[0].trim() ?? 'unknown'
+  if (!rateLimit(`verify:${ip}`, 20, 60_000)) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-4">
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <XCircle className="h-6 w-6 text-red-500" />
+              <CardTitle>Too Many Requests</CardTitle>
+            </div>
+            <CardDescription>
+              Please wait a moment before trying again.
+            </CardDescription>
+          </CardHeader>
+        </Card>
+      </div>
+    )
+  }
+
   const supabase = await createClient()
   
   const { data, error } = await supabase.rpc('verify_credential', { code })
@@ -70,11 +95,6 @@ export default async function VerifyPage({ params }: PageProps) {
           <div>
             <p className="text-sm text-muted-foreground">Issued To</p>
             <p className="font-medium">{credential.member_name}</p>
-          </div>
-          
-          <div>
-            <p className="text-sm text-muted-foreground">Student ID</p>
-            <p className="font-medium">{credential.member_student_id}</p>
           </div>
           
           <div className="grid grid-cols-2 gap-4">
