@@ -1,5 +1,4 @@
 import { rateLimit } from '@/lib/rate-limit'
-import { createAdminClient } from '@/lib/supabase/admin'
 import { createClient } from '@/lib/supabase/server'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -18,13 +17,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  // Use admin client for all database operations to bypass RLS
-  // This is necessary because RLS policies may not have proper auth context
-  // in server-side API routes during the login flow
-  const adminClient = createAdminClient()
-
-  // Check if member already exists using admin client
-  const { data: existingMember } = await adminClient
+  // Check if member already exists
+  const { data: existingMember } = await supabase
     .from('members')
     .select('id')
     .eq('id', user.id)
@@ -43,7 +37,7 @@ export async function POST(request: NextRequest) {
 
   // Create new member
   try {
-    const { data, error } = await adminClient
+    const { data, error } = await supabase
       .from('members')
       .insert({
         id: user.id,
