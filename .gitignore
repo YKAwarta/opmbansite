@@ -48,5 +48,4 @@ supabase-schema.sql
 
 .claude/
 
-# IDE
-.idea/
+credentials/
