@@ -47,5 +47,6 @@ supabase/.temp
 supabase-schema.sql
 
 .claude/
+.mcp.json
 
 credentials/
