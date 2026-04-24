@@ -24,7 +24,7 @@ const femaleOfficers: Officer[] = [
   { name: 'Dania Alkhani', position: 'Financial Officer' },
   { name: 'Zina Dabbagh', position: 'Operations Officer' },
   { name: 'Deemah Al Hassan', position: 'Media Officer' },
-  { name: 'Modhi Al Saud', position: 'Strategic Relations Officer' },
+  { name: 'Aljohara Alouda', position: 'Strategic Relations Officer' },
 ]
 
 // helper to split presidents vs others (case-insensitive)
