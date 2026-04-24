@@ -65,8 +65,29 @@ export const discordVerifySchema = z.object({
 })
 
 /**
+ * Buckets the admin storage delete route is permitted to touch.
+ * Extend this list rather than removing the allowlist if more buckets need cleanup access.
+ */
+export const DELETABLE_STORAGE_BUCKETS = ['generated-credentials'] as const
+
+/**
+ * Validation schema for deleting an object from Supabase Storage via the admin route
+ */
+export const deleteStorageObjectSchema = z.object({
+  bucket: z.enum(DELETABLE_STORAGE_BUCKETS, {
+    message: 'Bucket is not in the deletable allowlist'
+  }),
+  path: z.string()
+    .min(1, 'Path is required')
+    .max(500, 'Path too long')
+    .refine((p) => !p.includes('..'), { message: 'Path traversal segments are not allowed' })
+    .refine((p) => !p.startsWith('/'), { message: 'Path must not start with /' })
+})
+
+/**
  * Type exports for use in route handlers
  */
 export type InviteMemberInput = z.infer<typeof inviteMemberSchema>
 export type IssueCredentialInput = z.infer<typeof issueCredentialSchema>
 export type DiscordVerifyInput = z.infer<typeof discordVerifySchema>
+export type DeleteStorageObjectInput = z.infer<typeof deleteStorageObjectSchema>
